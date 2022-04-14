@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  web:
+    container_name: rest-server
+    hostname: rest-server
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
+    build:
+      context: .
+      target: development
+      dockerfile: ./docker/dev/web.Dockerfile
+    volumes:
+      - .:/app
+    env_file: .env
+    ports:
+      - "8080:${APP_PORT}"
+
+
+  mariadb:
+    image: "mariadb"
+    container_name: mysql
+    hostname: mysql
+    restart: 'always'
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+    volumes:
+      - /var/docker/mariadb/conf:/etc/mysql
+    ports:
+      - "3306:3306"
+
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - "9000:8080"
