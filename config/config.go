@@ -25,36 +25,36 @@ func GetConfig() *Config {
 	}
 
 	_, filename, _, _ := runtime.Caller(0)
-	envPath := filepath.Join(filepath.Dir(filename), "../.env")
+	envPath := filepath.Join(filepath.Dir(filename), "../.env.development")
 
 	var err error
 	env, err = godotenv.Read(envPath)
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env.development file")
 	}
 
 	Configs = &Config{
-		DB:   newDBConfig(env),
+		DB:   newDBConfig(),
 		Auth: newAuthConfig(),
-		App:  newAppConfig(env),
+		App:  newAppConfig(),
 	}
 
 	return Configs
 }
 
-func lookup(key string, fallback string) string {
+func GetString(key string, fallback string) string {
 	if value, ok := env[key]; ok {
 		return value
 	}
 	return fallback
 }
 
-func GetString(key string, defaultValue string) string {
-	return lookup(key, defaultValue)
+func GetEnv(key string) string {
+	return GetString(key, "")
 }
 
 func GetDuration(key string, fallback time.Duration) time.Duration {
-	value := lookup(key, "")
+	value := GetString(key, "")
 	if value, err := time.ParseDuration(value); err == nil {
 		return value
 	}

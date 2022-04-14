@@ -19,7 +19,8 @@ go.work
 
 tmp
 .air.toml
-.env
+.env.development
+.env.production
 
 database/
 

@@ -10,20 +10,6 @@ import (
 	"net/http"
 )
 
-type loginResponse struct {
-	AccessToken string `json:"accessToken"`
-}
-type meResponse struct {
-	User struct {
-		Name string
-	}
-}
-
-func hello(c echo.Context) error {
-
-	return c.String(http.StatusOK, "Hello")
-
-}
 func me(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*token.JwtCustomClaims)
@@ -43,7 +29,6 @@ func login(c echo.Context) error {
 	if err := c.Bind(input); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-
 	if err := c.Validate(input); err != nil {
 		return err
 	}
@@ -53,15 +38,21 @@ func login(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, attemptError.Error())
 	}
 
-	accessToken, _, tokenError := authService.GenerateToken(user)
-	if tokenError != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, tokenError.Error())
+	accessToken, atErr := authService.GenerateAccessToken(user)
+	if atErr != nil {
+		return echo.ErrInternalServerError
 	}
 
-	// save refreshToken to cookie
+	refreshToken, rtErr := authService.GenerateRefreshToken(user)
+	if rtErr != nil {
+		return echo.ErrInternalServerError
+	}
+
+	// TODO: save refreshToken to cookie
 
 	return c.JSON(http.StatusOK, loginResponse{
-		AccessToken: accessToken.String(),
+		AccessToken:  accessToken.String(),
+		RefreshToken: refreshToken.String(),
 	})
 }
 

@@ -6,10 +6,10 @@ type AppConfig struct {
 	Port string
 }
 
-func newAppConfig(e Env) *AppConfig {
+func newAppConfig() *AppConfig {
 	return &AppConfig{
-		Url:  e["APP_HOST"] + ":" + e["APP_PORT"],
-		Host: e["APP_HOST"],
-		Port: e["APP_PORT"],
+		Url:  GetEnv("APP_HOST") + ":" + GetEnv("APP_PORT"),
+		Host: GetEnv("APP_HOST"),
+		Port: GetEnv("APP_PORT"),
 	}
 }

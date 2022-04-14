@@ -14,7 +14,7 @@ services:
       dockerfile: ./docker/dev/web.Dockerfile
     volumes:
       - .:/app
-    env_file: .env
+    env_file: .env.development
     ports:
       - "8080:${APP_PORT}"
 
@@ -25,10 +25,10 @@ services:
     hostname: mysql
     restart: 'always'
     environment:
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
-      MYSQL_DATABASE: "${MYSQL_DATABASE}"
-      MYSQL_USER: "${MYSQL_USER}"
-      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
     volumes:
       - /var/docker/mariadb/conf:/etc/mysql
     ports:

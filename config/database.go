@@ -10,14 +10,14 @@ type DBConfig struct {
 	Charset  string
 }
 
-func newDBConfig(e Env) *DBConfig {
+func newDBConfig() *DBConfig {
 	return &DBConfig{
-		Dialect:  e["DB_CONNECTION"],
-		Host:     e["DB_HOST"],
-		Port:     e["DB_PORT"],
-		Username: e["MYSQL_USER"],
-		Password: e["MYSQL_ROOT_PASSWORD"],
-		Name:     e["MYSQL_DATABASE"],
+		Dialect:  GetEnv("DB_CONNECTION"),
+		Host:     GetEnv("DB_HOST"),
+		Port:     GetEnv("DB_PORT"),
+		Username: GetEnv("DB_USER"),
+		Password: GetEnv("DB_ROOT_PASSWORD"),
+		Name:     GetEnv("DB_DATABASE"),
 		Charset:  "utf8",
 	}
 }

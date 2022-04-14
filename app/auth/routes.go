@@ -6,7 +6,6 @@ import (
 )
 
 func Routes(e *echo.Echo) {
-	e.GET("/hello", hello)
 	restricted := e.Group("/auth")
 	restricted.Use(middleware.AuthMiddleware(e))
 	restricted.GET("/me", me)

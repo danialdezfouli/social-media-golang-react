@@ -1,6 +1,8 @@
 package config
 
-import "time"
+import (
+	"time"
+)
 
 type AuthConfig struct {
 	AccessTokenSecret   string
@@ -12,10 +14,10 @@ type AuthConfig struct {
 
 func newAuthConfig() *AuthConfig {
 	return &AuthConfig{
-		AccessTokenDuration: GetDuration("ACCESS_TOKEN_DURATION", time.Duration(time.Now().Add(time.Minute*15).Unix())),
-		AccessTokenSecret:   GetString("ACCESS_TOKEN_SECRET", ""),
+		AccessTokenDuration: time.Minute * 15,
+		AccessTokenSecret:   GetEnv("ACCESS_TOKEN_SECRET"),
 
-		RefreshTokenDuration: GetDuration("REFRESH_TOKEN_DURATION", time.Duration(time.Now().Add(time.Minute*15).Unix())),
-		RefreshTokenSecret:   GetString("REFRESH_TOKEN_SECRET", ""),
+		RefreshTokenDuration: time.Hour * 24 * 30,
+		RefreshTokenSecret:   GetEnv("REFRESH_TOKEN_SECRET"),
 	}
 }
