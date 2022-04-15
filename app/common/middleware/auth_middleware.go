@@ -16,3 +16,14 @@ func AuthMiddleware(e *echo.Echo) echo.MiddlewareFunc {
 
 	return middleware.JWTWithConfig(config)
 }
+
+// RefreshTokenValidationMiddleware TODO: fix it
+func RefreshTokenValidationMiddleware(e *echo.Echo) echo.MiddlewareFunc {
+	secret := config.GetConfig().Auth.RefreshTokenSecret
+	config := middleware.JWTConfig{
+		Claims:     &token.JwtCustomClaims{},
+		SigningKey: []byte(secret),
+	}
+
+	return middleware.JWTWithConfig(config)
+}

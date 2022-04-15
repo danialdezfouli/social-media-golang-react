@@ -53,6 +53,20 @@ func GetEnv(key string) string {
 	return GetString(key, "")
 }
 
+func GetBoolean(key string, fallback bool) bool {
+	value := GetString(key, "")
+
+	if value == "" {
+		return fallback
+	}
+
+	if value == "true" || value == "1" {
+		return true
+	}
+
+	return false
+}
+
 func GetDuration(key string, fallback time.Duration) time.Duration {
 	value := GetString(key, "")
 	if value, err := time.ParseDuration(value); err == nil {

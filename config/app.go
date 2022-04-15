@@ -1,15 +1,17 @@
 package config
 
 type AppConfig struct {
-	Url  string
-	Host string
-	Port string
+	Url        string
+	Host       string
+	Port       string
+	Production bool
 }
 
 func newAppConfig() *AppConfig {
 	return &AppConfig{
-		Url:  GetEnv("APP_HOST") + ":" + GetEnv("APP_PORT"),
-		Host: GetEnv("APP_HOST"),
-		Port: GetEnv("APP_PORT"),
+		Production: GetBoolean("Production", false),
+		Url:        GetEnv("APP_HOST") + ":" + GetEnv("APP_PORT"),
+		Host:       GetEnv("APP_HOST"),
+		Port:       GetEnv("APP_PORT"),
 	}
 }

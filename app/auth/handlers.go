@@ -7,6 +7,8 @@ import (
 	"jupiter/app/auth/dto"
 	"jupiter/app/auth/service"
 	"jupiter/app/common/token"
+	"jupiter/app/model"
+	"jupiter/config"
 	"net/http"
 )
 
@@ -23,7 +25,6 @@ func me(c echo.Context) error {
 
 func login(c echo.Context) error {
 	loginService := service.LoginService{}
-	authService := service.AuthService{}
 	input := new(dto.LoginInput)
 
 	if err := c.Bind(input); err != nil {
@@ -38,6 +39,26 @@ func login(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, attemptError.Error())
 	}
 
+	return responseGenerateTokens(c, user)
+
+}
+
+func register(c echo.Context) error {
+	registerService := service.RegisterService{}
+	input := new(dto.RegisterInput)
+
+	if err := c.Bind(input); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	if err := c.Validate(input); err != nil {
+		return err
+	}
+
+	return registerService.Register(c, input)
+}
+
+func responseGenerateTokens(c echo.Context, user *model.User) error {
+	authService := service.AuthService{}
 	accessToken, atErr := authService.GenerateAccessToken(user)
 	if atErr != nil {
 		return echo.ErrInternalServerError
@@ -48,14 +69,17 @@ func login(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	// TODO: save refreshToken to cookie
+	c.SetCookie(&http.Cookie{
+		Name:     "refresh_token",
+		Value:    refreshToken.String(),
+		Path:     "/",
+		Expires:  refreshToken.ExpiresAt(),
+		Secure:   config.GetConfig().App.Production,
+		HttpOnly: true,
+		SameSite: http.SameSiteNoneMode,
+	})
 
 	return c.JSON(http.StatusOK, loginResponse{
-		AccessToken:  accessToken.String(),
-		RefreshToken: refreshToken.String(),
+		AccessToken: accessToken.String(),
 	})
-}
-
-func register(c echo.Context) error {
-	return c.String(http.StatusOK, "Register!")
 }

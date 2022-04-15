@@ -1,8 +1,7 @@
 package auth
 
 type loginResponse struct {
-	AccessToken  string `json:"accessToken"`
-	RefreshToken string `json:"refreshToken"`
+	AccessToken string `json:"accessToken"`
 }
 
 type meResponse struct {
