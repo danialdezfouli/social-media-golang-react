@@ -7,7 +7,7 @@ import (
 	"jupiter/config"
 )
 
-func AuthMiddleware(e *echo.Echo) echo.MiddlewareFunc {
+func AuthMiddleware() echo.MiddlewareFunc {
 	secret := config.GetConfig().Auth.AccessTokenSecret
 	config := middleware.JWTConfig{
 		Claims:     &token.JwtCustomClaims{},
@@ -17,12 +17,12 @@ func AuthMiddleware(e *echo.Echo) echo.MiddlewareFunc {
 	return middleware.JWTWithConfig(config)
 }
 
-// RefreshTokenValidationMiddleware TODO: fix it
-func RefreshTokenValidationMiddleware(e *echo.Echo) echo.MiddlewareFunc {
+func RefreshTokenValidationMiddleware() echo.MiddlewareFunc {
 	secret := config.GetConfig().Auth.RefreshTokenSecret
 	config := middleware.JWTConfig{
-		Claims:     &token.JwtCustomClaims{},
-		SigningKey: []byte(secret),
+		Claims:      &token.JwtCustomClaims{},
+		SigningKey:  []byte(secret),
+		TokenLookup: "cookie:refresh_token",
 	}
 
 	return middleware.JWTWithConfig(config)

@@ -1,24 +1,24 @@
 package auth
 
 import (
-	"fmt"
-	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"jupiter/app/auth/dto"
 	"jupiter/app/auth/service"
-	"jupiter/app/common/token"
 	"net/http"
 )
 
 func me(c echo.Context) error {
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*token.JwtCustomClaims)
-	name := claims.Username
+	user, err := service.AuthService{}.User(c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 
-	fmt.Println(claims)
-
-	return c.String(http.StatusOK, "Welcome "+name+"!")
-
+	return c.JSON(http.StatusOK, meResponse{
+		Name:      user.Name,
+		Username:  user.Username,
+		Suspended: user.Suspended,
+		Image:     user.Image,
+	})
 }
 
 func login(c echo.Context) error {
@@ -61,5 +61,13 @@ func register(c echo.Context) error {
 	}
 
 	return authService.Response(c, user)
+}
 
+func refreshToken(c echo.Context) error {
+	authService := service.AuthService{}
+	user, err := authService.User(c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return authService.Response(c, user)
 }

@@ -6,10 +6,8 @@ import (
 )
 
 func Routes(e *echo.Echo) {
-	restricted := e.Group("/auth")
-	restricted.Use(middleware.AuthMiddleware(e))
-	restricted.GET("/me", me)
-
 	e.POST("/auth/login", login)
 	e.POST("/auth/register", register)
+	e.GET("/auth/me", me, middleware.AuthMiddleware())
+	e.POST("/auth/refresh_token", refreshToken, middleware.AuthMiddleware(), middleware.RefreshTokenValidationMiddleware())
 }

@@ -1,11 +1,8 @@
 package auth
 
-//type loginResponse struct {
-//	AccessToken string `json:"accessToken"`
-//}
-
 type meResponse struct {
-	User struct {
-		Name string
-	}
+	Name      string `json:"name"`
+	Username  string `json:"username"`
+	Suspended bool   `json:"suspended"`
+	Image     string `json:"image"`
 }
