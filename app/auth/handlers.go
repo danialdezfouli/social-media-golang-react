@@ -63,7 +63,11 @@ func register(c echo.Context) error {
 
 func refreshToken(c echo.Context) error {
 	authService := service.AuthService{}
-	user := c.Get("user").(*model.User)
+	user, err := authService.User(c)
+
+	if err != nil {
+		return err
+	}
 
 	return authService.Response(c, user)
 }
