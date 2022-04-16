@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func home(c echo.Context) error {
+func feeds(c echo.Context) error {
 	var users []model.User
 	db := app.GetInstance().DB
 	db.Find(&users)

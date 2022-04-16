@@ -1,4 +1,4 @@
-package feeds
+package relationship
 
 import (
 	"github.com/labstack/echo/v4"
@@ -9,5 +9,6 @@ func Routes(e *echo.Echo) {
 	r := e.Group("/")
 	r.Use(middleware.AuthMiddleware())
 
-	r.GET("/feeds", feeds)
+	r.POST("/follow/:id", follow)
+	r.DELETE("/unfollow/:id", unfollow)
 }
