@@ -16,8 +16,8 @@ func TestFindEnglishHashtags(t *testing.T) {
 }
 
 func TestFindPersianHashtags(t *testing.T) {
-	expected := []string{"اولین", "توییترـفارسی"}
-	tags := FindHashtags("این #اولین پست من است #توییترـفارسی")
+	expected := []string{"اولین", "توییتر_فارسی"}
+	tags := FindHashtags("این #اولین پست من است #توییتر_فارسی")
 
 	for i, item := range expected {
 		if tags[i] != item {

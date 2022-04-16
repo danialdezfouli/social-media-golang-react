@@ -31,7 +31,7 @@ func main() {
 	result := db.FirstOrCreate(admin)
 
 	createUsers(db)
-	createPosts(db)
+	//createPosts(db)
 
 	if result.RowsAffected > 0 {
 		feedUserWithPosts(admin)
@@ -61,7 +61,7 @@ func feedUserWithPosts(user *model.User) {
 	post1 := &model.Post{
 		User:     *user,
 		ParentId: sql.NullInt32{},
-		Content:  "این اولین پست من است #توییترـفارسی",
+		Content:  "این اولین پست من است #توییتر_فارسی",
 	}
 
 	service.NewPostService(db).CreatePost(post1)

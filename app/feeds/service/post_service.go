@@ -16,20 +16,22 @@ func (s postService) CreatePost(p *model.Post) postService {
 	s.post = p
 	s.db.Create(p)
 
-	// TODO: find hashtags
-	// s.AddHashtag("#tag")
+	tags := FindHashtags(p.Content)
+	for _, tag := range tags {
+		s.AddHashtag(p, tag)
+	}
 
 	return s
 }
 
-func (s postService) AddHashtag(name string) postService {
+func (s postService) AddHashtag(p *model.Post, name string) postService {
 	hashtag := &model.Hashtag{
 		Name: name,
 	}
 	s.db.Where(hashtag).FirstOrCreate(&hashtag)
 
 	hashtagPost := &model.HashtagPost{
-		Post:    *s.post,
+		Post:    *p,
 		Hashtag: *hashtag,
 	}
 	s.db.Create(hashtagPost)
