@@ -5,8 +5,6 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	App "jupiter/app"
-	"jupiter/app/feeds/service"
-	"jupiter/app/model"
 	"jupiter/config"
 	"log"
 )
@@ -39,39 +37,7 @@ func main() {
 	configs := config.GetConfig()
 	app := App.NewApp(configs)
 
-	db := freshDB(app, configs)
+	freshDB(app, configs)
 	app.Migrate()
-
-	// default data
-
-	user := &model.User{
-		Username: "Danial",
-		Email:    "danial@gmail.com",
-	}
-	db.Create(user)
-
-	user2 := &model.User{
-		Username: "Ali",
-		Email:    "ali@gmail.com",
-	}
-	db.Create(user2)
-
-	service.NewUserService(db).Follow(user2, user)
-	//service.NewUserService(db).UnFollow(user2, user)
-
-	post := &model.Post{
-		User:    *user,
-		Content: "پست نمونه #توییتر",
-	}
-	service.NewPostService(db).CreatePost(post).AddHashtag("توییتر")
-
-	post2 := &model.Post{
-		User:    *user,
-		Content: "پست نمونه #توییت2",
-	}
-	service.NewPostService(db).CreatePost(post2).AddHashtag("توییتر").AddHashtag("example")
-
-	service.NewFavoriteService(db).AddFavorite(post, user)
-	service.NewFavoriteService(db).AddFavorite(post, user2)
 
 }
