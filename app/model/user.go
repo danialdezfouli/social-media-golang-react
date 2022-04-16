@@ -11,7 +11,7 @@ type User struct {
 	Name           string `gorm:"size:255" faker:"name"`
 	Username       string `json:"username" gorm:"size:255; index; not null" faker:"username"`
 	Email          string `json:"email" gorm:"size:255; index; not null" faker:"email"`
-	Password       string `gorm:"size:255; not null" faker:"password"`
+	Password       string `gorm:"size:255; not null" faker:"password" json:"-"`
 	Bio            string `gorm:"size:255" faker:"sentence"`
 	Image          string `gorm:"size:255" faker:"-"`
 	Birthday       string `gorm:"type: date; default: null" faker:"-"`

@@ -8,6 +8,6 @@ import (
 func Routes(e *echo.Echo) {
 	e.POST("/auth/login", login)
 	e.POST("/auth/register", register)
-	e.GET("/auth/me", me, middleware.AuthMiddleware())
+	e.GET("/auth/me", me, middleware.AuthMiddleware(), middleware.UserMiddleware())
 	e.POST("/auth/refresh_token", refreshToken, middleware.RefreshTokenValidationMiddleware())
 }

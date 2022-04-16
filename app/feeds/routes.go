@@ -7,7 +7,7 @@ import (
 
 func Routes(e *echo.Echo) {
 	r := e.Group("/")
-	r.Use(middleware.AuthMiddleware())
+	r.Use(middleware.AuthMiddleware(), middleware.UserMiddleware())
 
-	r.GET("feeds", feeds)
+	r.GET("timeline", timeline)
 }

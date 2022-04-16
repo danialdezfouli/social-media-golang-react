@@ -10,6 +10,10 @@ import (
 type FollowService struct {
 }
 
+func NewFollowService() *FollowService {
+	return &FollowService{}
+}
+
 func findUser(user *model.User, id uint) (*model.User, error) {
 	if user.ID == id {
 		return nil, errors.New("you cannot follow yourself")
