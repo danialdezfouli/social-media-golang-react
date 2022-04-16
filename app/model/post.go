@@ -7,11 +7,11 @@ import (
 type Post struct {
 	PostId uint `gorm:"primarykey" faker:"-"`
 	UserId uint `gorm:"index" faker:"-"`
-	User   User `gorm:"foreignKey:UserId; constraint:OnDelete:CASCADE;"`
+	User   User `gorm:"foreignKey:UserId; constraint:OnDelete:CASCADE;" faker:"-"`
 
 	ParentId uint `gorm:"index" faker:"-"`
 
-	Type    int    `gorm:"type:tinyint(1); default:1"`
+	Type    int    `gorm:"type:tinyint(1); default:1" faker:"oneof: 1,2,3,4"`
 	Content string `gorm:"size:1000" faker:"sentence"`
 
 	FavoritesCount int `gorm:"type:int(11); default:0"`
