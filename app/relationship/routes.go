@@ -9,6 +9,6 @@ func Routes(e *echo.Echo) {
 	r := e.Group("/")
 	r.Use(middleware.AuthMiddleware())
 
-	r.POST("/follow/:id", follow)
-	r.DELETE("/unfollow/:id", unfollow)
+	r.POST("follow/:id", follow)
+	r.DELETE("unfollow/:id", unfollow)
 }

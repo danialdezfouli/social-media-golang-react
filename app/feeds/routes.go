@@ -9,5 +9,5 @@ func Routes(e *echo.Echo) {
 	r := e.Group("/")
 	r.Use(middleware.AuthMiddleware())
 
-	r.GET("/feeds", feeds)
+	r.GET("feeds", feeds)
 }
