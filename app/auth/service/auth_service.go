@@ -3,9 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
-	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
-	"jupiter/app"
 	"jupiter/app/common/token"
 	"jupiter/app/model"
 	"jupiter/config"
@@ -22,13 +20,13 @@ func (s AuthService) GenerateAccessToken(user *model.User) (*token.JwtCustomToke
 		Email:    user.Email,
 	}
 
-	token, err := token.Generate(token.AccessToken, claims)
+	t, err := token.Generate(token.AccessToken, claims)
 
 	if err != nil {
 		return nil, errors.New("service.authService.GenerateAccessToken")
 	}
 
-	return token, nil
+	return t, nil
 }
 
 func (s AuthService) GenerateRefreshToken(user *model.User) (*token.JwtCustomToken, error) {
@@ -38,13 +36,13 @@ func (s AuthService) GenerateRefreshToken(user *model.User) (*token.JwtCustomTok
 		Email:    user.Email,
 	}
 
-	token, err := token.Generate(token.RefreshToken, claims)
+	t, err := token.Generate(token.RefreshToken, claims)
 
 	if err != nil {
 		return nil, errors.New("service.authService.GenerateAccessToken")
 	}
 
-	return token, nil
+	return t, nil
 }
 
 func (s AuthService) Response(c echo.Context, user *model.User) error {
@@ -74,20 +72,20 @@ func (s AuthService) Response(c echo.Context, user *model.User) error {
 	})
 }
 
-func (s AuthService) User(c echo.Context) (*model.User, error) {
-	jwtUser := c.Get("user").(*jwt.Token)
-	claims := jwtUser.Claims.(*token.JwtCustomClaims)
-
-	db := app.GetInstance().DB
-	user := &model.User{
-		ID: claims.UserID,
-	}
-
-	result := db.First(user)
-
-	if result.Error != nil {
-		return nil, errors.New("user not found")
-	}
-
-	return user, nil
-}
+//func (s AuthService) User(c echo.Context) (*model.User, error) {
+//	jwtUser := c.Get("user").(*jwt.Token)
+//	claims := jwtUser.Claims.(*token.JwtCustomClaims)
+//
+//	db := app.GetDB()
+//	user := &model.User{
+//		ID: claims.UserID,
+//	}
+//
+//	result := db.First(user)
+//
+//	if result.Error != nil {
+//		return nil, errors.New("user not found")
+//	}
+//
+//	return user, nil
+//}

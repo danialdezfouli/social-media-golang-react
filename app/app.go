@@ -19,6 +19,10 @@ func GetInstance() *App {
 	return instance
 }
 
+func GetDB() *gorm.DB {
+	return instance.DB
+}
+
 func NewApp(config *config.Config) *App {
 	instance = new(App)
 	instance.createDatabaseConnection(config.DB)

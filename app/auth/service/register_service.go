@@ -13,8 +13,8 @@ import (
 type RegisterService struct {
 }
 
-func (s RegisterService) Register(c echo.Context, input *dto.RegisterInput) (*model.User, error) {
-	db := app.GetInstance().DB
+func (s RegisterService) Register(input *dto.RegisterInput) (*model.User, error) {
+	db := app.GetDB()
 	var foundUser *model.User
 	result := db.Model(&model.User{}).
 		Where("LOWER(email)=? or LOWER(username)=?", strings.ToLower(input.Email), strings.ToLower(input.Username)).

@@ -4,14 +4,12 @@ import (
 	"github.com/labstack/echo/v4"
 	"jupiter/app/auth/dto"
 	"jupiter/app/auth/service"
+	"jupiter/app/model"
 	"net/http"
 )
 
 func me(c echo.Context) error {
-	user, err := service.AuthService{}.User(c)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
+	user := c.Get("user").(*model.User)
 
 	return c.JSON(http.StatusOK, meResponse{
 		Name:      user.Name,
@@ -55,7 +53,7 @@ func register(c echo.Context) error {
 		return err
 	}
 
-	user, err := registerService.Register(c, input)
+	user, err := registerService.Register(input)
 	if err != nil {
 		return err
 	}
@@ -65,9 +63,7 @@ func register(c echo.Context) error {
 
 func refreshToken(c echo.Context) error {
 	authService := service.AuthService{}
-	user, err := authService.User(c)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
+	user := c.Get("user").(*model.User)
+
 	return authService.Response(c, user)
 }

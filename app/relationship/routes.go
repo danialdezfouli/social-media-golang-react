@@ -7,8 +7,10 @@ import (
 
 func Routes(e *echo.Echo) {
 	r := e.Group("/")
-	r.Use(middleware.AuthMiddleware())
 
-	r.POST("follow/:id", follow)
-	r.DELETE("unfollow/:id", unfollow)
+	r.Use(middleware.AuthMiddleware())
+	r.Use(middleware.UserMiddleware())
+
+	r.POST("follow/:ID", follow)
+	r.DELETE("unfollow/:ID", unfollow)
 }

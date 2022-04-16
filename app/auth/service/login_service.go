@@ -13,7 +13,7 @@ type LoginService struct {
 }
 
 func (s LoginService) Attempt(input *dto.LoginInput) (*model.User, error) {
-	db := app.GetInstance().DB
+	db := app.GetDB()
 
 	var user *model.User
 
@@ -28,7 +28,7 @@ func (s LoginService) Attempt(input *dto.LoginInput) (*model.User, error) {
 	}
 
 	if user.Suspended {
-		return nil, errors.New("your account is suspended")
+		return nil, errors.New("you cannot login; your account is suspended")
 	}
 
 	return user, nil
@@ -36,5 +36,5 @@ func (s LoginService) Attempt(input *dto.LoginInput) (*model.User, error) {
 }
 
 func (s LoginService) LoginUsingId(id int) (*model.User, error) {
-	return nil, nil
+	return nil, errors.New("Login User by Id: " + string(id))
 }

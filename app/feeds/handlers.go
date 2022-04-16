@@ -9,7 +9,7 @@ import (
 
 func feeds(c echo.Context) error {
 	var users []model.User
-	db := app.GetInstance().DB
+	db := app.GetDB()
 	db.Find(&users)
 
 	return c.JSON(http.StatusOK, users)
