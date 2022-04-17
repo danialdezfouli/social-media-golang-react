@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type ProfileResponse struct {
+type Profile struct {
 	ID             uint      `json:"id,omitempty"`
 	Name           string    `json:"name,omitempty"`
 	Username       string    `json:"username,omitempty"`
