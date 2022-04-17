@@ -3,12 +3,22 @@ package feeds
 import (
 	"github.com/labstack/echo/v4"
 	"jupiter/app"
+	"jupiter/app/feeds/dto"
 	"jupiter/app/feeds/repository"
 	"jupiter/app/model"
 	"net/http"
 )
 
+const (
+	timelinePostLimit = 30
+)
+
 func timeline(c echo.Context) error {
+	params := new(dto.TimelineDTO)
+	if err := c.Bind(params); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
 	user := c.Get("user").(*model.User)
 	var posts = &[]repository.Post{}
 
@@ -21,11 +31,9 @@ func timeline(c echo.Context) error {
 		Group("post_id").
 		Where("posts.user_id = follows.following_id").
 		Order("created_at desc").
+		Limit(timelinePostLimit).
+		Offset(int(params.Offset)).
 		Find(posts)
-
-	//for i, post := range *posts {
-	//	post.TypeText = translate(post.Type)
-	//}
 
 	return c.JSON(http.StatusOK, posts)
 }
