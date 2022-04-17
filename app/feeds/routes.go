@@ -10,4 +10,5 @@ func Routes(e *echo.Echo) {
 	r.Use(middleware.AuthMiddleware(), middleware.UserMiddleware())
 
 	r.GET("timeline", timeline)
+	r.GET("profile/:id", profile)
 }

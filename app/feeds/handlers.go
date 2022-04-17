@@ -3,7 +3,6 @@ package feeds
 import (
 	"github.com/labstack/echo/v4"
 	"jupiter/app"
-	"jupiter/app/feeds/dto"
 	"jupiter/app/feeds/repository"
 	"jupiter/app/model"
 	"net/http"
@@ -14,7 +13,7 @@ const (
 )
 
 func timeline(c echo.Context) error {
-	params := new(dto.TimelineDTO)
+	params := new(timelineDTO)
 	if err := c.Bind(params); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -36,4 +35,34 @@ func timeline(c echo.Context) error {
 		Find(posts)
 
 	return c.JSON(http.StatusOK, posts)
+}
+
+func profile(c echo.Context) error {
+	params := new(profileDTO)
+	if err := c.Bind(params); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	var user *model.User
+
+	result := app.GetDB().Where(model.User{ID: params.ID}).First(&user)
+
+	if result.RowsAffected == 0 {
+		return echo.ErrNotFound
+	}
+
+	return c.JSON(http.StatusOK, repository.ProfileResponse{
+		ID:             user.ID,
+		Name:           user.Name,
+		Username:       user.Username,
+		Bio:            user.Bio,
+		Image:          user.Image,
+		Birthday:       user.Birthday,
+		Suspended:      user.Suspended,
+		Official:       user.Official,
+		FollowersCount: user.FollowersCount,
+		FollowingCount: user.FollowingCount,
+		CreatedAt:      user.CreatedAt,
+	})
+
 }
