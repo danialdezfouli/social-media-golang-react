@@ -54,3 +54,24 @@ func profileTimeline(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, posts)
 }
+
+func profileLikes(c echo.Context) error {
+	params := new(dto.TimelineDTO)
+	if err := c.Bind(params); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	profile, err := service.FindProfile(c)
+	if err != nil {
+		return err
+	}
+
+	var posts = &[]repository.Post{}
+
+	service.QueryTimeline(int(params.Offset)).
+		Joins("inner join favorites on favorites.post_id = posts.post_id").
+		Where("favorites.user_id", profile.ID).
+		Find(posts)
+
+	return c.JSON(http.StatusOK, posts)
+}

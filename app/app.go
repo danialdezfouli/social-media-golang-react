@@ -40,7 +40,10 @@ func (app *App) createDatabaseConnection(config *config.DBConfig) {
 		config.Name,
 		config.Charset)
 
-	db, err := gorm.Open(mysql.Open(dbURI), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dbURI), &gorm.Config{
+		//Logger: logger.Default.LogMode(logger.Info),
+	})
+
 	if err != nil {
 		log.Fatal("failed to connect database")
 	}
