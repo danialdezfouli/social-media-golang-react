@@ -28,19 +28,65 @@ func main() {
 		Password: password,
 	}
 
-	result := db.FirstOrCreate(admin)
+	db.FirstOrCreate(admin)
+	db.Where("1=1").Delete(model.Post{})
 
+	feedUserWithPosts(admin)
 	createUsers(db)
-	//createPosts(db)
+	createPosts(db)
 
-	if result.RowsAffected > 0 {
-		feedUserWithPosts(admin)
-	}
 	feedUsersWithFollowing()
+	createReplies(db)
 
-	// TODO: add replies to posts
-	// TODO: add favorite to posts
-	//service.NewFavoriteService(db).AddFavorite(post, user)
+	createFavorites(db)
+
+}
+
+func createFavorites(db *gorm.DB) {
+	for i := 0; i < 50; i++ {
+
+		var user *model.User
+		db.Order("rand()").First(&user)
+
+		var post *model.Post
+		db.Order("rand()").First(&post)
+
+		db.FirstOrCreate(&model.Favorite{
+			UserId: user.ID,
+			PostId: post.PostId,
+		})
+		service.NewPostService(db).UpdatePostCounters(post)
+	}
+}
+
+func createReplies(db *gorm.DB) {
+	var users []model.User
+	db.Find(&users)
+
+	var posts []model.Post
+	db.Where("parent_id is null").Find(&posts)
+
+	for i := 0; i < 20; i++ {
+		user := users[rand.Intn(len(users))]
+		parent := posts[rand.Intn(len(posts))]
+
+		post := &model.Post{
+			User: user,
+			ParentId: sql.NullInt32{
+				Int32: int32(parent.PostId),
+				Valid: true,
+			},
+		}
+
+		faker.FakeData(post)
+
+		if post.PostType == model.PostTypeRepost {
+			post.Content = ""
+		}
+
+		service.NewPostService(db).CreatePost(post)
+		service.NewPostService(db).UpdatePostCounters(&parent)
+	}
 }
 
 func feedUsersWithFollowing() {
@@ -57,6 +103,12 @@ func feedUsersWithFollowing() {
 
 func feedUserWithPosts(user *model.User) {
 	db := app.GetDB()
+	var count int64
+	db.Model(&model.Post{}).Where("user_id", user.ID).Count(&count)
+
+	if count > 2 {
+		return
+	}
 
 	post1 := &model.Post{
 		User:     *user,
@@ -103,7 +155,7 @@ func createPosts(db *gorm.DB) {
 	var users []model.User
 	db.Find(&users)
 
-	for i := 0; i < 30; i++ {
+	for i := 0; i < 15; i++ {
 		user := users[rand.Intn(len(users))]
 
 		post := &model.Post{
@@ -111,6 +163,7 @@ func createPosts(db *gorm.DB) {
 		}
 
 		err := faker.FakeData(post)
+		post.PostType = model.PostTypePost
 		post.CreatedAt = time.Now()
 
 		if err != nil {
