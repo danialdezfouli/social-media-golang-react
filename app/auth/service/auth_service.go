@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"jupiter/app"
@@ -58,7 +57,6 @@ func (s AuthService) Response(c echo.Context, user *model.User) error {
 		return echo.ErrInternalServerError
 	}
 
-	fmt.Println(refreshToken.ExpiresAt())
 	c.SetCookie(&http.Cookie{
 		Name:     "refresh_token",
 		Value:    refreshToken.String(),

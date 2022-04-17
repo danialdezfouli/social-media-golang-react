@@ -12,8 +12,8 @@ type favoriteService struct {
 
 func (s favoriteService) AddFavorite(post *model.Post, user *model.User) favoriteService {
 	s.db.Create(&model.Favorite{
-		User: *user,
-		Post: *post,
+		UserId: user.ID,
+		PostId: post.PostId,
 	})
 
 	return s

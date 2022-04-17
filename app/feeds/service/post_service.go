@@ -31,10 +31,10 @@ func (s postService) AddHashtag(p *model.Post, name string) postService {
 	s.db.Where(hashtag).FirstOrCreate(&hashtag)
 
 	hashtagPost := &model.HashtagPost{
-		Post:    *p,
-		Hashtag: *hashtag,
+		PostId:    p.PostId,
+		HashtagId: hashtag.ID,
 	}
-	s.db.Create(hashtagPost)
+	s.db.FirstOrCreate(hashtagPost)
 
 	// update posts count
 	var count int64
