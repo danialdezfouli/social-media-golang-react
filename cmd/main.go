@@ -8,9 +8,8 @@ import (
 
 func main() {
 	configs := config.GetConfig()
-	jupiter := app.NewApp(configs)
-	rest := server.NewRest(jupiter)
+	app.NewApp(configs)
 
+	rest := server.NewRest()
 	rest.Listen(configs.App.Url)
-
 }
