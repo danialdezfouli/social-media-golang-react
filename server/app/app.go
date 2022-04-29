@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"jupiter/app/model"
 	"jupiter/config"
 	"log"
@@ -26,6 +27,7 @@ func GetDB() *gorm.DB {
 func NewApp(config *config.Config) *App {
 	instance = new(App)
 	instance.createDatabaseConnection(config.DB)
+	instance.Migrate()
 
 	return instance
 }
@@ -41,7 +43,7 @@ func (app *App) createDatabaseConnection(config *config.DBConfig) {
 		config.Charset)
 
 	db, err := gorm.Open(mysql.Open(dbURI), &gorm.Config{
-		//Logger: logger.Default.LogMode(logger.Info),
+		Logger: logger.Default.LogMode(logger.Info),
 	})
 
 	if err != nil {
