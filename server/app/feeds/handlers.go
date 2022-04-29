@@ -82,10 +82,16 @@ func findPost(c echo.Context) error {
 		return echo.ErrNotFound
 	}
 
+	var parentsMap = map[uint]repository.Post{}
+
+	for _, parent := range parents {
+		parentsMap[parent.PostId] = parent
+	}
+
 	return c.JSON(http.StatusOK, echo.Map{
 		"post":    post,
 		"replies": replies,
-		"parents": parents,
+		"parents": parentsMap,
 	})
 }
 
