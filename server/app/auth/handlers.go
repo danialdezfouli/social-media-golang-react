@@ -12,6 +12,7 @@ func me(c echo.Context) error {
 	user := c.Get("user").(*model.User)
 
 	return c.JSON(http.StatusOK, meResponse{
+		ID:        user.ID,
 		Name:      user.Name,
 		Username:  user.Username,
 		Suspended: user.Suspended,

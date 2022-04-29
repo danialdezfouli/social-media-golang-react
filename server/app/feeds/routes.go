@@ -10,6 +10,10 @@ func Routes(e *echo.Echo) {
 	r.Use(middleware.AuthMiddleware(), middleware.UserMiddleware())
 
 	r.GET("timeline", homeTimeline)
+	r.GET("search", search)
+
+	r.GET("post/:id", handlePost)
+
 	r.GET("profile/:id", profile)
 	r.GET("profile/:id/timeline", profileTimeline)
 	r.GET("profile/:id/likes", profileLikes)

@@ -55,7 +55,7 @@ func createFavorites(db *gorm.DB) {
 			UserId: user.ID,
 			PostId: post.PostId,
 		})
-		service.NewPostService(db).UpdatePostCounters(post)
+		service.NewPostService(db, nil).UpdatePostCounters(post)
 	}
 }
 
@@ -82,10 +82,17 @@ func createReplies(db *gorm.DB) {
 
 		if post.PostType == model.PostTypeRepost {
 			post.Content = ""
+			post.FavoritesCount = 0
+			post.RepliesCount = 0
+		} else if post.PostType == model.PostTypePost {
+			post.ParentId = sql.NullInt32{
+				Int32: 0,
+				Valid: false,
+			}
 		}
 
-		service.NewPostService(db).CreatePost(post)
-		service.NewPostService(db).UpdatePostCounters(&parent)
+		service.NewPostService(db, nil).CreatePost(post)
+		service.NewPostService(db, nil).UpdatePostCounters(&parent)
 	}
 }
 
@@ -116,7 +123,7 @@ func feedUserWithPosts(user *model.User) {
 		Content:  "این اولین پست من است #توییتر_فارسی",
 	}
 
-	service.NewPostService(db).CreatePost(post1)
+	service.NewPostService(db, nil).CreatePost(post1)
 
 	post2 := &model.Post{
 		User: *user,
@@ -128,8 +135,8 @@ func feedUserWithPosts(user *model.User) {
 		Content:  "‌سلام به همه این دومین #توییت من است",
 	}
 
-	service.NewPostService(db).CreatePost(post2)
-	service.NewPostService(db).UpdatePostCounters(post1)
+	service.NewPostService(db, nil).CreatePost(post2)
+	service.NewPostService(db, nil).UpdatePostCounters(post1)
 
 }
 

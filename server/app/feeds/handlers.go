@@ -2,6 +2,8 @@ package feeds
 
 import (
 	"github.com/labstack/echo/v4"
+	"jupiter/app"
+	"jupiter/app/common"
 	"jupiter/app/feeds/dto"
 	"jupiter/app/feeds/repository"
 	"jupiter/app/feeds/service"
@@ -17,61 +19,75 @@ func homeTimeline(c echo.Context) error {
 
 	user := c.Get("user").(*model.User)
 	var posts = &[]repository.Post{}
+	var parents = &[]repository.Post{}
+	var parentIds []uint
+	var profiles = &[]repository.SearchProfile{}
 
-	service.QueryTimeline(int(params.Offset)).
+	service.QueryTimeline(int(params.Offset), user).
 		Joins("inner join follows on follows.follower_id = ?", user.ID).
 		Where("posts.user_id = follows.following_id").
 		Find(posts)
 
-	return c.JSON(http.StatusOK, posts)
-}
+	service.QuerySuggestedProfiles(user).Find(profiles)
 
-func profile(c echo.Context) error {
-	profile, err := service.FindProfile(c)
-	if err != nil {
-		return err
+	// add parents
+	for _, post := range *posts {
+		if post.ParentId != 0 && !common.Contains(parentIds, post.ParentId) {
+			parentIds = append(parentIds, post.ParentId)
+		}
+	}
+	service.QueryTimelineBasic(user).Where("posts.post_id in ?", parentIds).Find(parents)
+
+	var parentsMap = map[uint]repository.Post{}
+
+	for _, parent := range *parents {
+		parentsMap[parent.PostId] = parent
 	}
 
-	return c.JSON(http.StatusOK, profile)
+	return c.JSON(http.StatusOK, echo.Map{
+		"parents":            parentsMap,
+		"suggested_profiles": profiles,
+		"posts":              posts,
+	})
 }
 
-func profileTimeline(c echo.Context) error {
-	params := new(dto.TimelineDTO)
+func search(c echo.Context) error {
+	params := new(dto.SearchDTO)
 	if err := c.Bind(params); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	profile, err := service.FindProfile(c)
-	if err != nil {
-		return err
-	}
+	var users = &[]repository.SearchProfile{}
 
-	var posts = &[]repository.Post{}
+	// TODO: add tags search
+	service.SearchUsers(params.Query).Find(users)
 
-	service.QueryTimeline(int(params.Offset)).
-		Where("posts.user_id = ?", profile.ID).
-		Find(posts)
-
-	return c.JSON(http.StatusOK, posts)
+	return c.JSON(http.StatusOK, users)
 }
 
-func profileLikes(c echo.Context) error {
-	params := new(dto.TimelineDTO)
+func handlePost(c echo.Context) error {
+	params := new(dto.PostDTO)
 	if err := c.Bind(params); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	profile, err := service.FindProfile(c)
+	db := app.GetDB()
+	postService := service.NewPostService(db, c)
+
+	post, err := postService.FindPost(params.ID)
+	replies := postService.FindReplies(post)
+	parents := postService.FindParents(post)
+
 	if err != nil {
-		return err
+		return echo.ErrNotFound
 	}
 
-	var posts = &[]repository.Post{}
+	return c.JSON(http.StatusOK, echo.Map{
+		"post":    post,
+		"replies": replies,
+		"parents": parents,
+	})
 
-	service.QueryTimeline(int(params.Offset)).
-		Joins("inner join favorites on favorites.post_id = posts.post_id").
-		Where("favorites.user_id", profile.ID).
-		Find(posts)
+	//var replies = &[]repository.Post
 
-	return c.JSON(http.StatusOK, posts)
 }

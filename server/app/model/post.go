@@ -15,6 +15,8 @@ type Post struct {
 	Content        string        `gorm:"size:1000" faker:"sentence"`
 	FavoritesCount uint          `gorm:"type:int(11); default:0" faker:"-"`
 	RepliesCount   uint          `gorm:"type:int(11); default:0" faker:"-"`
+	RepostCount    uint          `gorm:"type:int(11); default:0" faker:"-"`
+	QuoteCount     uint          `gorm:"type:int(11); default:0" faker:"-"`
 
 	CreatedAt time.Time
 }

@@ -15,5 +15,9 @@ type Post struct {
 	Content         string    `json:"content"`
 	FavoritesCount  int       `json:"favorites_count"`
 	RepliesCount    int       `json:"replies_count"`
+	RepostCount     int       `json:"repost_count"`
+	QuoteCount      int       `json:"quote_count"`
+	Reposted        bool      `json:"reposted"`
+	Liked           bool      `json:"liked"`
 	CreatedAt       time.Time `json:"created_at"`
 }
