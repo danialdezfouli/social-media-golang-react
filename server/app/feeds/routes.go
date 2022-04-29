@@ -12,7 +12,8 @@ func Routes(e *echo.Echo) {
 	r.GET("timeline", homeTimeline)
 	r.GET("search", search)
 
-	r.GET("post/:id", handlePost)
+	r.GET("post/:id", findPost)
+	r.POST("post/:id/like", likePost)
 
 	r.GET("profile/:id", profile)
 	r.GET("profile/:id/timeline", profileTimeline)

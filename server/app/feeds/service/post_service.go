@@ -1,9 +1,11 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
+	"jupiter/app/common"
 	"jupiter/app/feeds/repository"
 	"jupiter/app/model"
 	"regexp"
@@ -25,7 +27,7 @@ func NewPostService(db *gorm.DB, context echo.Context) *postService {
 
 func (s postService) FindPost(id uint) (*repository.Post, error) {
 	var post *repository.Post
-	user := s.c.Get("user").(*model.User)
+	user := common.GetUser(s.c)
 
 	result := QueryTimelineBasic(user).Where(model.Post{PostId: id}).First(&post)
 
@@ -34,6 +36,25 @@ func (s postService) FindPost(id uint) (*repository.Post, error) {
 	}
 
 	return post, nil
+}
+
+func (s postService) ToggleLike(post *repository.Post, user *model.User) bool {
+	fav := model.Favorite{}
+	result := s.db.Where(&model.Favorite{UserId: user.ID, PostId: post.PostId}).First(&fav)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		fav := &model.Favorite{
+			UserId: user.ID,
+			PostId: post.PostId,
+		}
+		s.db.Create(fav)
+
+		return true
+	}
+
+	s.db.Where(&model.Favorite{UserId: user.ID, PostId: post.PostId}).Limit(1).Delete(model.Favorite{})
+
+	return false
 }
 
 func (s postService) FindReplies(post *repository.Post) []repository.Post {
@@ -129,9 +150,15 @@ func (s postService) UpdatePostCounters(post *model.Post) {
 	s.db.Model(&model.Post{}).Where("post_type", "reply").Where("parent_id", post.PostId).Count(&replies)
 	s.db.Model(&model.Favorite{}).Where("post_id", post.PostId).Count(&favorites)
 
-	post.RepliesCount = uint(replies)
-	post.FavoritesCount = uint(favorites)
-	s.db.Save(&post)
+	result := s.db.Model(&post).Limit(1).Updates(map[string]interface{}{
+		"replies_count":   replies,
+		"favorites_count": favorites,
+	})
+
+	if result.Error != nil {
+		fmt.Println(result.Error.Error())
+	}
+
 }
 
 func FindHashtags(content string) []string {

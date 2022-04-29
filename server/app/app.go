@@ -26,24 +26,29 @@ func GetDB() *gorm.DB {
 
 func NewApp(config *config.Config) *App {
 	instance = new(App)
-	instance.createDatabaseConnection(config.DB)
+	instance.createDatabaseConnection(config)
 	instance.Migrate()
 
 	return instance
 }
 
-func (app *App) createDatabaseConnection(config *config.DBConfig) {
+func (app *App) createDatabaseConnection(config *config.Config) {
 
 	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=True",
-		config.Username,
-		config.Password,
-		config.Host,
-		config.Port,
-		config.Name,
-		config.Charset)
+		config.DB.Username,
+		config.DB.Password,
+		config.DB.Host,
+		config.DB.Port,
+		config.DB.Name,
+		config.DB.Charset)
+
+	var logProvider logger.Interface
+	if !config.App.Production {
+		logProvider = logger.Default.LogMode(logger.Info)
+	}
 
 	db, err := gorm.Open(mysql.Open(dbURI), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger: logProvider,
 	})
 
 	if err != nil {

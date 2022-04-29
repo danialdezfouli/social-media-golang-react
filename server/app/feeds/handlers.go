@@ -65,7 +65,7 @@ func search(c echo.Context) error {
 	return c.JSON(http.StatusOK, users)
 }
 
-func handlePost(c echo.Context) error {
+func findPost(c echo.Context) error {
 	params := new(dto.PostDTO)
 	if err := c.Bind(params); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -87,7 +87,29 @@ func handlePost(c echo.Context) error {
 		"replies": replies,
 		"parents": parents,
 	})
+}
 
-	//var replies = &[]repository.Post
+func likePost(c echo.Context) error {
+	params := new(dto.PostDTO)
+	user := common.GetUser(c)
+	err := c.Bind(params)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	db := app.GetDB()
+	postService := service.NewPostService(db, c)
+	post, err := postService.FindPost(params.ID)
+	liked := postService.ToggleLike(post, user)
+	postService.UpdatePostCounters(&model.Post{PostId: post.PostId})
+
+	if err != nil {
+		return echo.ErrNotFound
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"post":  post,
+		"liked": liked,
+	})
 
 }
