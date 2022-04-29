@@ -1,8 +1,10 @@
 package config
 
 import (
+	"errors"
+	"fmt"
 	"github.com/joho/godotenv"
-	"log"
+	"os"
 	"path/filepath"
 	"runtime"
 	"time"
@@ -27,10 +29,18 @@ func GetConfig() *Config {
 	_, filename, _, _ := runtime.Caller(0)
 	envPath := filepath.Join(filepath.Dir(filename), "../.env.development")
 
-	var err error
-	env, err = godotenv.Read(envPath)
-	if err != nil {
-		log.Fatal("Error loading .env.development file")
+	if _, err := os.Stat(envPath); !errors.Is(err, os.ErrNotExist) {
+		env, _ := godotenv.Read(envPath)
+		//if err != nil {
+		//log.Fatal("Error loading .env.development file")
+		//}
+
+		for key, val := range env {
+			if os.Getenv(key) != "" {
+				fmt.Println("default Value for "+key+" :", os.Getenv(key))
+			}
+			os.Setenv(key, val)
+		}
 	}
 
 	Configs = &Config{
@@ -43,9 +53,11 @@ func GetConfig() *Config {
 }
 
 func GetString(key string, fallback string) string {
-	if value, ok := env[key]; ok {
+	value := os.Getenv(key)
+	if value != "" {
 		return value
 	}
+
 	return fallback
 }
 
