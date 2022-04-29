@@ -61,7 +61,7 @@ func (s postService) FindReplies(post *repository.Post) []repository.Post {
 	var replies []repository.Post
 	user := s.c.Get("user").(*model.User)
 
-	result := QueryTimelineBasic(user).Where("posts.parent_id", post.PostId).Find(&replies)
+	result := QueryTimelineBasic(user).Where("posts.parent_id", post.PostId).Where("posts.post_type", model.PostTypeReply).Find(&replies)
 
 	if result.Error != nil {
 		fmt.Println(result.Error.Error())
