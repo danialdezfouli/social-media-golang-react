@@ -64,7 +64,8 @@ func (s AuthService) Response(c echo.Context, user *model.User) error {
 		Expires:  refreshToken.ExpiresAt(),
 		Secure:   config.GetConfig().App.Production,
 		HttpOnly: true,
-		SameSite: http.SameSiteNoneMode,
+		//SameSite: http.SameSiteNoneMode,
+		SameSite: http.SameSiteLaxMode,
 	})
 
 	return c.JSON(http.StatusOK, echo.Map{
