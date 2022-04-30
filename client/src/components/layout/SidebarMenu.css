@@ -1,0 +1,56 @@
+.app-layout__sidebar nav {
+  @apply flex flex-col gap-2;
+  height: 100%;
+}
+
+.app-layout__sidebar .user-profile__btn,
+.app-layout__sidebar button,
+.app-layout__sidebar nav a {
+  @apply rounded-full hover:bg-gray-200/70 px-5 py-3 flex gap-2 w-full;
+  transition: 0.2s .1s color, 0.2s 0.1s background-color;
+}
+
+.app-layout__sidebar .user-profile__btn:hover,
+.app-layout__sidebar button:hover,
+.app-layout__sidebar nav a:hover {
+  transition: 0.2s color, 0.2s background-color;
+}
+
+.app-layout__sidebar nav a.active {
+  @apply font-bold;
+}
+
+.app-layout__sidebar nav svg {
+  font-size: 1.5rem;
+  display: none;
+}
+
+.app-layout__sidebar nav a:not(.active) svg:last-of-type,
+.app-layout__sidebar nav a.active svg:first-of-type {
+  display: block;
+}
+
+.app-layout__sidebar .user-profile {
+  position: relative;
+  margin-top: auto;
+}
+
+.app-layout__sidebar .user-profile__btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 1;
+  width: 100%;
+  cursor: pointer;
+}
+
+.app-layout__sidebar .user-profile__panel {
+  @apply absolute z-10 bottom-16 right-0;
+  @apply p-4 rounded-xl;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(64, 65, 72, 0.25);
+}
+
+.app-layout__sidebar .user-profile__panel button {
+  @apply rounded-lg;
+}

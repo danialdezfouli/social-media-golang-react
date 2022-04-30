@@ -1,0 +1,70 @@
+{
+  "translation": {
+    "site": {
+      "name": "توییتر فارسی"
+    },
+    "error": {
+      "network": "خطا در ارتباط با سرور",
+      "page-not-found": "صفحه مورد نظر وجود ندارد"
+    },
+    "actions": {
+      "loading": "در حال بارگذاری...",
+      "refetch": "تلاش مجدد"
+    },
+    "home": {
+      "welcome": "به توییتر فارسی خوش آمدید",
+      "login": "ورود کاربران",
+      "signup": "ثبت نام کاربران"
+    },
+    "search": {
+      "input": "جستجو",
+      "title": "نتایج یافت شده:",
+      "no-result": "نتیجه‌ای یافت نشد"
+    },
+    "login": {
+      "email": "ایمیل یا نام کاربری",
+      "password": "رمز عبور",
+      "submit": "ورود",
+      "dont-have-an-account": "حساب کاربری ندارید؟",
+      "signup": "ثبت نام کنید"
+    },
+    "signup": {
+      "email": "ایمیل",
+      "username": "نام کاربری",
+      "name": "نام",
+      "password": "رمز عبور",
+      "submit": "ثبت نام",
+      "already-have-an-account": "حساب کاربری دارید؟",
+      "login": "ورود"
+    },
+    "menu": {
+      "home": "صفحه اصلی",
+      "profile": "پروفایل",
+      "settings": "تنظیمات",
+      "search": "جستجو",
+      "logout": "خروج"
+    },
+    "post": {
+      "deleted": "پست مورد نظر حذف شده",
+      "reposted": "باز نشر کرد",
+      "replying-to": "در پاسخ به",
+      "like": "پسند",
+      "replies": "پاسخ",
+      "reply": "پاسخ",
+      "repost": "بازنشر",
+      "quote": "نقل قول"
+    },
+    "profile": {
+      "posts": "پست‌ها",
+      "followers": "دنبال کننده",
+      "edit-profile": "ویرایش پروفایل",
+      "follow": "دنبال کردن",
+      "following": "دنبال می‌کنید",
+      "unfollow": "دنبال نکردن"
+    },
+
+    "settings": {
+      "title": "تنظیمات"
+    }
+  }
+}

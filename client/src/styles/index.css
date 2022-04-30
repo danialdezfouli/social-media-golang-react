@@ -1,0 +1,24 @@
+@font-face {
+  font-family: iranyekan;
+  font-style: normal;
+  font-display: swap;
+  font-weight: normal;
+  src: url("../fonts/iranyekanwebregular.woff") format("woff");
+}
+
+@font-face {
+  font-family: iranyekan;
+  font-style: normal;
+  font-display: swap;
+  font-weight: bold;
+  src: url("../fonts/iranyekanwebbold.woff") format("woff");
+}
+
+:root {
+  --primary: #1d9bf0;
+}
+
+body {
+  font-family: iranyekan, sans-serif;
+  overflow-y: scroll;
+}

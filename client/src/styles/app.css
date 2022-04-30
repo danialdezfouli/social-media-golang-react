@@ -1,0 +1,3 @@
+.auth-page .form-group label {
+  @apply block mb-1 text-gray-700;
+}

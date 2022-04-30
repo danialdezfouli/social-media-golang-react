@@ -1,0 +1,34 @@
+.profile-page__header {
+  padding: 2rem;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-page__name {
+  line-height: 1;
+  font-weight: bold;
+}
+
+.profile-page__username {
+  @apply text-gray-600 text-sm;
+  display: inline-block;
+  direction: ltr;
+  text-align: right;
+}
+
+.profile-page__bio {
+  margin-top: 1rem;
+}
+
+.profile-page__followers {
+  margin-top: 1rem;
+}
+
+.profile-page__posts-header {
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.profile-page__posts {
+  /* margin-top: 2rem; */
+  padding-bottom: 10rem;
+}

@@ -1,0 +1,10 @@
+.replied-to-parents .post-item__link {
+  border-bottom: none;
+}
+.replied-to-parents .post-item__link {
+  @apply pr-10;
+}
+
+.replied-to-parents .post-item .profile .reply-line ~ .wrap {
+  padding-right: 0;
+}

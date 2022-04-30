@@ -1,0 +1,3 @@
+export function formatPost() {
+  return {};
+}

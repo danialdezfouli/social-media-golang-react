@@ -1,0 +1,29 @@
+.profile-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 4px;
+  border-bottom: 1px solid #eee;
+  transition: 0.2s background;
+  font-size: 0.875rem;
+}
+
+.profile-list-item:hover {
+  @apply bg-gray-100/50;
+}
+
+.profile-list-item .name {
+  @apply hover:underline;
+  font-weight: bold;
+}
+
+.profile-list-item .username {
+  @apply text-gray-600;
+  display: inline-block;
+  direction: ltr;
+  text-align: right;
+}
+
+.profile-list-item .followers {
+}
