@@ -22,9 +22,9 @@ func (s RegisterService) Register(input *dto.RegisterInput) (*model.User, error)
 
 	if result.RowsAffected > 0 {
 		if strings.ToLower(input.Email) == strings.ToLower(foundUser.Email) {
-			return nil, echo.NewHTTPError(http.StatusUnprocessableEntity, "user already exists with this email")
+			return nil, echo.NewHTTPError(http.StatusUnprocessableEntity, "email-exists")
 		} else {
-			return nil, echo.NewHTTPError(http.StatusUnprocessableEntity, "choose a unique username")
+			return nil, echo.NewHTTPError(http.StatusUnprocessableEntity, "username-exists")
 		}
 
 	}
