@@ -26,8 +26,8 @@ func follow(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, err.Error())
 	}
 
-	f.UpdateCounters(user)
-	f.UpdateCounters(friend)
+	_ = f.UpdateCounters(user)
+	_ = f.UpdateCounters(friend)
 
 	return c.JSON(http.StatusOK, echo.Map{"message": "followed"})
 }
@@ -50,8 +50,8 @@ func unfollow(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, err.Error())
 	}
 
-	f.UpdateCounters(user)
-	f.UpdateCounters(friend)
+	_ = f.UpdateCounters(user)
+	_ = f.UpdateCounters(friend)
 
 	return c.JSON(http.StatusOK, echo.Map{"message": "unfollowed"})
 }
