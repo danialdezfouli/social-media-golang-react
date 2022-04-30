@@ -59,7 +59,7 @@ func (s postService) ToggleLike(post *repository.Post, user *model.User) bool {
 
 func (s postService) FindReplies(post *repository.Post) []repository.Post {
 	var replies []repository.Post
-	user := s.c.Get("user").(*model.User)
+	user := common.GetUser(s.c)
 
 	result := QueryTimelineBasic(user).Where("posts.parent_id", post.PostId).Where("posts.post_type", model.PostTypeReply).Find(&replies)
 
@@ -82,9 +82,9 @@ func getParent(user *model.User, post *repository.Post) *repository.Post {
 	return parent
 }
 
-func (s postService) FindParents(post *repository.Post) []repository.Post {
+func (s postService) FindPostParentsHirarchy(post *repository.Post) []repository.Post {
 	var parents []repository.Post
-	user := s.c.Get("user").(*model.User)
+	user := common.GetUser(s.c)
 
 	n := 0
 	parent := post
@@ -158,7 +158,29 @@ func (s postService) UpdatePostCounters(post *model.Post) {
 	if result.Error != nil {
 		fmt.Println(result.Error.Error())
 	}
+}
 
+func (s postService) FindParentsForTimeline(posts *[]repository.Post) *[]repository.Post {
+	var parents = &[]repository.Post{}
+	var parentIds []uint
+
+	user := common.GetUser(s.c)
+	for _, post := range *posts {
+		if post.ParentId != 0 && !common.Contains(parentIds, post.ParentId) {
+			parentIds = append(parentIds, post.ParentId)
+		}
+	}
+
+	QueryTimelineBasic(user).Where("posts.post_id in ?", parentIds).Find(parents)
+	return parents
+}
+
+func (s postService) KeyByPostId(posts *[]repository.Post) map[uint]repository.Post {
+	var postsMap = map[uint]repository.Post{}
+	for _, post := range *posts {
+		postsMap[post.PostId] = post
+	}
+	return postsMap
 }
 
 func FindHashtags(content string) []string {

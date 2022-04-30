@@ -2,10 +2,11 @@ package feeds
 
 import (
 	"github.com/labstack/echo/v4"
+	"jupiter/app"
+	"jupiter/app/common"
 	"jupiter/app/feeds/dto"
 	"jupiter/app/feeds/repository"
 	"jupiter/app/feeds/service"
-	"jupiter/app/model"
 	"net/http"
 )
 
@@ -24,7 +25,9 @@ func profileTimeline(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	user := c.Get("user").(*model.User)
+	postService := service.NewPostService(app.GetDB(), c)
+
+	user := common.GetUser(c)
 	profile, err := service.FindProfile(c)
 	if err != nil {
 		return err
@@ -36,7 +39,13 @@ func profileTimeline(c echo.Context) error {
 		Where("posts.user_id = ?", profile.ID).
 		Find(posts)
 
-	return c.JSON(http.StatusOK, posts)
+	parents := postService.FindParentsForTimeline(posts)
+	parentsMap := postService.KeyByPostId(parents)
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"posts":   posts,
+		"parents": parentsMap,
+	})
 }
 
 func profileLikes(c echo.Context) error {
@@ -45,7 +54,7 @@ func profileLikes(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	user := c.Get("user").(*model.User)
+	user := common.GetUser(c)
 	profile, err := service.FindProfile(c)
 	if err != nil {
 		return err

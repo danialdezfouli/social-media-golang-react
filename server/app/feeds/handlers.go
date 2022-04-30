@@ -17,10 +17,10 @@ func homeTimeline(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	user := c.Get("user").(*model.User)
+	postService := service.NewPostService(app.GetDB(), c)
+
+	user := common.GetUser(c)
 	var posts = &[]repository.Post{}
-	var parents = &[]repository.Post{}
-	var parentIds []uint
 	var profiles = &[]repository.SearchProfile{}
 
 	service.QueryTimeline(int(params.Offset), user).
@@ -30,19 +30,8 @@ func homeTimeline(c echo.Context) error {
 
 	service.QuerySuggestedProfiles(user).Find(profiles)
 
-	// add parents
-	for _, post := range *posts {
-		if post.ParentId != 0 && !common.Contains(parentIds, post.ParentId) {
-			parentIds = append(parentIds, post.ParentId)
-		}
-	}
-	service.QueryTimelineBasic(user).Where("posts.post_id in ?", parentIds).Find(parents)
-
-	var parentsMap = map[uint]repository.Post{}
-
-	for _, parent := range *parents {
-		parentsMap[parent.PostId] = parent
-	}
+	parents := postService.FindParentsForTimeline(posts)
+	parentsMap := postService.KeyByPostId(parents)
 
 	return c.JSON(http.StatusOK, echo.Map{
 		"parents":            parentsMap,
@@ -78,7 +67,7 @@ func findPost(c echo.Context) error {
 
 	post, err := postService.FindPost(params.ID)
 	replies := postService.FindReplies(post)
-	parents := postService.FindParents(post)
+	parents := postService.FindPostParentsHirarchy(post)
 
 	if err != nil {
 		return echo.ErrNotFound

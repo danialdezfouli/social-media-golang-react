@@ -4,12 +4,12 @@ import (
 	"github.com/labstack/echo/v4"
 	"jupiter/app/auth/dto"
 	"jupiter/app/auth/service"
-	"jupiter/app/model"
+	"jupiter/app/common"
 	"net/http"
 )
 
 func me(c echo.Context) error {
-	user := c.Get("user").(*model.User)
+	user := common.GetUser(c)
 
 	return c.JSON(http.StatusOK, meResponse{
 		ID:        user.ID,
