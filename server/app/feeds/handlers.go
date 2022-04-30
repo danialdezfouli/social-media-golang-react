@@ -62,7 +62,9 @@ func search(c echo.Context) error {
 	// TODO: add tags search
 	service.SearchUsers(params.Query).Find(users)
 
-	return c.JSON(http.StatusOK, users)
+	return c.JSON(http.StatusOK, echo.Map{
+		"profiles": users,
+	})
 }
 
 func findPost(c echo.Context) error {

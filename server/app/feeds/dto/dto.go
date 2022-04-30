@@ -1,7 +1,7 @@
 package dto
 
 type ProfileDTO struct {
-	ID uint `param:"id"`
+	Username string `param:"id"`
 }
 
 type TimelineDTO struct {

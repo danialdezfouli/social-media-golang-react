@@ -11,6 +11,6 @@ func Routes(e *echo.Echo) {
 	r.Use(middleware.AuthMiddleware())
 	r.Use(middleware.UserMiddleware())
 
-	r.POST("follow/:ID", follow)
-	r.DELETE("unfollow/:ID", unfollow)
+	r.POST("follow/:Username", follow)
+	r.DELETE("unfollow/:Username", unfollow)
 }

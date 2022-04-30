@@ -16,7 +16,7 @@ func FindProfile(c echo.Context) (*repository.Profile, error) {
 	}
 
 	var profile *repository.Profile
-	result := app.GetDB().Model(&model.User{}).Where("id", params.ID).First(&profile)
+	result := app.GetDB().Model(&model.User{}).Where("username", params.Username).First(&profile)
 	if result.RowsAffected == 0 {
 		return nil, echo.ErrNotFound
 	}

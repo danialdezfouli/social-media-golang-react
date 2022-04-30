@@ -17,7 +17,7 @@ func QueryTimelineBasic(user *model.User) *gorm.DB {
 		).
 		Joins("inner join users on users.id = user_id").
 		Joins("left join posts user_posts on user_posts.parent_id = posts.post_id and user_posts.post_type = ? and user_posts.user_id = ?", "repost", user.ID)
-	//Joins("left join favorites on favorites.post_id = posts.post_id and favorites.user_id = ?", user.ID)
+	//Joins("left join favorites on favorites.post_id = posts.post_id and favorites.user_id = ?", user.Username)
 
 }
 func QueryTimeline(offset int, user *model.User) *gorm.DB {
