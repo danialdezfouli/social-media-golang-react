@@ -56,6 +56,7 @@ export default function PostPage() {
             <PostItem
               key={p.post_id}
               post={p}
+              linkedPost={post}
               replyLine={i === 0 ? "down" : "both"}
               parent={data.parents[p.parent_id]}
             />
@@ -76,7 +77,12 @@ export default function PostPage() {
       {data && (
         <div className="replies-list">
           {data.replies.map((p, i) => (
-            <PostItem key={p.post_id} post={p} parent={post} />
+            <PostItem
+              key={p.post_id}
+              post={p}
+              parent={post}
+              linkedPost={post}
+            />
           ))}
         </div>
       )}

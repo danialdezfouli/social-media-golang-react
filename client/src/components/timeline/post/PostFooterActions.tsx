@@ -10,6 +10,7 @@ import { postDateTime } from "utils/dates";
 type PostActionsProps = {
   post: IPost;
   parent?: IPost;
+  linkedPost?: IPost;
   largeLayout: boolean;
 };
 
@@ -17,6 +18,7 @@ export default function PostActions({
   post,
   largeLayout = true,
   parent,
+  linkedPost,
 }: PostActionsProps) {
   const { isLiked } = useLike();
   const { t } = useTranslation();
@@ -27,7 +29,11 @@ export default function PostActions({
     return post;
   }, [parent, post]);
 
-  const likeMutate = useLikeMutation(post, source, post.profile_username);
+  const likeMutate = useLikeMutation(
+    linkedPost || post,
+    source,
+    post.profile_username
+  );
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();

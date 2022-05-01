@@ -9,6 +9,7 @@ import { TReplyLine } from "./types";
 
 type PostItemProps = {
   post: IPost;
+  linkedPost?: IPost;
   parent: IPost | undefined;
   showActions?: boolean;
   replyLine?: TReplyLine;
@@ -19,6 +20,7 @@ export default function PostItem(props: PostItemProps) {
   const {
     post,
     parent,
+    linkedPost,
     isFullPost = false,
     showActions = true,
     replyLine,
@@ -100,7 +102,12 @@ export default function PostItem(props: PostItemProps) {
         ))}
 
       {showActions && (
-        <PostFooterActions post={post} parent={parent} largeLayout={isFullPost} />
+        <PostFooterActions
+          post={post}
+          parent={parent}
+          linkedPost={linkedPost}
+          largeLayout={isFullPost}
+        />
       )}
     </article>
   );

@@ -23,8 +23,9 @@ export default function useLikeMutation(
   return useMutation(likeRequest, {
     async onMutate() {
       await queryClient.cancelQueries(QUERY_KEYS.TIMELINE);
-      await queryClient.cancelQueries([QUERY_KEYS.POST, post.post_id + ""]);
       await queryClient.cancelQueries([QUERY_KEYS.PROFILE_TIMELINE, username]);
+      await queryClient.cancelQueries([QUERY_KEYS.POST, post.post_id + ""]);
+      // await queryClient.cancelQueries([QUERY_KEYS.POST, source.post_id + ""]);
 
       if (isLiked(source.post_id)) {
         removeLike(source.post_id);
@@ -38,6 +39,7 @@ export default function useLikeMutation(
       queryClient.invalidateQueries(QUERY_KEYS.TIMELINE);
       queryClient.invalidateQueries([QUERY_KEYS.PROFILE_TIMELINE, username]);
       queryClient.invalidateQueries([QUERY_KEYS.POST, post.post_id + ""]);
+      // queryClient.invalidateQueries([QUERY_KEYS.POST, source.post_id + ""]);
     },
   });
 }

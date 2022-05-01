@@ -41,7 +41,10 @@ export function LikeProvider({ children }: { children: React.ReactNode }) {
 
   const setLikes = (posts: IPost[]) => {
     const ids = posts.filter((post) => post.liked).map((post) => post.post_id);
-    setState(ids);
+
+    setState((state) => {
+      return Array.from(new Set([...state, ...ids]));
+    });
   };
 
   const context: ILikeContext = {
