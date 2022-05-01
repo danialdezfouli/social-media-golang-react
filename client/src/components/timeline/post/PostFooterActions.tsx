@@ -1,6 +1,7 @@
 import useLikeMutation from "connection/mutations/useLikeMutation";
 import { IPost } from "connection/types";
-import { useMemo } from "react";
+import { useLike } from "contexts/LikeContext";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { RiChat1Line, RiHeart3Fill, RiHeart3Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
@@ -8,30 +9,45 @@ import { postDateTime } from "utils/dates";
 
 type PostActionsProps = {
   post: IPost;
+  parent?: IPost;
   largeLayout: boolean;
 };
 
 export default function PostActions({
   post,
   largeLayout = true,
+  parent,
 }: PostActionsProps) {
+  const { isLiked } = useLike();
   const { t } = useTranslation();
+  const source = useMemo(() => {
+    if (post.post_type === "repost" && parent) {
+      return parent;
+    }
+    return post;
+  }, [parent, post]);
 
-  const likeMutate = useLikeMutation(post);
+  const likeMutate = useLikeMutation(post, source, post.profile_username);
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    likeMutate.mutate(post);
+    likeMutate.mutate(source);
   };
 
-  const formattedDate = useMemo(() => {
-    return postDateTime(post.created_at);
-  }, [post.created_at]);
+  const formattedDate = useMemo(
+    () => postDateTime(source.created_at),
+    [source.created_at]
+  );
+
+  const liked = useMemo(
+    () => isLiked(source.post_id),
+    [isLiked, source.post_id]
+  );
 
   return (
     <footer className="post-footer">
       {largeLayout && (
-        <Link className="date" to={"/post/" + post.post_id}>
+        <Link className="date" to={"/post/" + source.post_id}>
           {formattedDate}
         </Link>
       )}
@@ -39,24 +55,24 @@ export default function PostActions({
       {largeLayout && (
         <div className="charts">
           <div>
-            <b>{post.favorites_count}</b>
+            <b>{source.favorites_count}</b>
             <span>{t("post.like")}</span>
           </div>
           <div>
-            <b>{post.replies_count}</b>
+            <b>{source.replies_count}</b>
             <span>{t("post.replies")}</span>
           </div>
         </div>
       )}
       <div className="actions">
         <button
-          className={"like " + (post.liked ? "en" : "")}
+          className={"like " + (liked ? "en" : "")}
           title={t("post.like")}
           onClick={handleLike}
           disabled={likeMutate.isLoading}
         >
-          <i>{post.liked ? <RiHeart3Fill /> : <RiHeart3Line />}</i>
-          {!largeLayout && <span>{post.favorites_count}</span>}
+          <i>{liked ? <RiHeart3Fill /> : <RiHeart3Line />}</i>
+          {!largeLayout && <span>{source.favorites_count}</span>}
         </button>
         <button
           className="reply"
@@ -66,7 +82,7 @@ export default function PostActions({
           <i>
             <RiChat1Line />
           </i>
-          {!largeLayout && <span>{post.replies_count}</span>}
+          {!largeLayout && <span>{source.replies_count}</span>}
         </button>
         {/* <button
           className={"repost " + (post.reposted ? "en" : "")}
@@ -74,7 +90,7 @@ export default function PostActions({
           onClick={(e) => e.stopPropagation()}
         >
           <i><RiRepeat2Line /></i>
-          <span>{post.repost_count}</span>
+          <span>{source.repost_count}</span>
         </button>
         <button
           className="quote"
@@ -82,7 +98,7 @@ export default function PostActions({
           onClick={(e) => e.stopPropagation()}
         >
           <i><RiChatQuoteLine /></i>
-          <span>{post.quote_count}</span>
+          <span>{source.quote_count}</span>
         </button> */}
       </div>
     </footer>

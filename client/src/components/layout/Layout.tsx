@@ -3,6 +3,7 @@ import { Spinner } from "components/elements/Spinner";
 import Text from "components/elements/Text";
 import useMeQuery from "connection/queries/useMeQuery";
 import { useAuth } from "contexts/AuthContext";
+import { LikeProvider } from "contexts/LikeContext";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -54,7 +55,9 @@ export default function Layout() {
     <div className="container">
       <main className="app-layout">
         <section className="app-layout__content">
-          <Outlet />
+          <LikeProvider>
+            <Outlet />
+          </LikeProvider>
         </section>
         <aside className="app-layout__sidebar">
           <SidebarMenu />

@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { humanTime } from "utils/dates";
 import { TReplyLine } from "./types";
@@ -24,10 +23,8 @@ export default function PostProfileHeader(props: PostProfileHeaderProps) {
     replyLine,
   } = props;
 
-  const date = useMemo(
-    () => showDate && humanTime(createdAt, "fa_IR"),
-    [showDate, createdAt]
-  );
+  const date = showDate && humanTime(createdAt, "fa_IR");
+
   const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
   return (

@@ -2,13 +2,20 @@ import { Spinner } from "components/elements/Spinner";
 import PostItem from "components/timeline/post/Post";
 import usePostQuery from "connection/queries/usePostQuery";
 import { IPost } from "connection/types";
+import { useLike } from "contexts/LikeContext";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import "./PostPage.css";
 
 export default function PostPage() {
   const params = useParams<{ id: string }>();
-  const { data, isLoading } = usePostQuery(params.id!);
+  const { setLikes } = useLike();
+  const { data, isLoading } = usePostQuery(params.id!, {
+    onSuccess: (data) => {
+      setLikes([data.post, ...Object.values(data.parents)]);
+    },
+  });
+
   const post = data?.post;
 
   const isTypeReplying = post?.post_type === "reply";
@@ -69,11 +76,7 @@ export default function PostPage() {
       {data && (
         <div className="replies-list">
           {data.replies.map((p, i) => (
-            <PostItem
-              key={p.post_id}
-              post={p}
-              parent={post}
-            />
+            <PostItem key={p.post_id} post={p} parent={post} />
           ))}
         </div>
       )}

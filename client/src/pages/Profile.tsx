@@ -5,6 +5,7 @@ import useProfileQuery from "connection/queries/useProfileQuery";
 import useProfileTimelineQuery from "connection/queries/useProfileTimelineQuery";
 import { IProfile } from "connection/types";
 import { useAuth } from "contexts/AuthContext";
+import { useLike } from "contexts/LikeContext";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
@@ -28,7 +29,13 @@ export default function Profile() {
 
 function ProfilePosts({ profile }: { profile: IProfile }) {
   const { t } = useTranslation();
-  const { data } = useProfileTimelineQuery(profile.username);
+  const { setLikes } = useLike();
+  const { data } = useProfileTimelineQuery(profile.username, {
+    onSuccess: (data) => {
+      setLikes([...data.posts, ...Object.values(data.parents)]);
+    },
+  });
+
   return (
     <>
       <div className="profile-page__posts-header">

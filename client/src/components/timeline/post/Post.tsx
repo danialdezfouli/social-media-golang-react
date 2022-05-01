@@ -100,7 +100,7 @@ export default function PostItem(props: PostItemProps) {
         ))}
 
       {showActions && (
-        <PostFooterActions post={post} largeLayout={isFullPost} />
+        <PostFooterActions post={post} parent={parent} largeLayout={isFullPost} />
       )}
     </article>
   );

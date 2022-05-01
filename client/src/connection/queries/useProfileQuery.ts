@@ -1,8 +1,8 @@
 import { AxiosError } from "axios";
-import { QueryFunctionContext, useQuery } from "react-query";
+import { QueryFunctionContext, useQuery, UseQueryOptions } from "react-query";
 import { api } from "./../api";
 import { QUERY_KEYS } from "./../QueryKeys";
-import { IProfile } from './../types';
+import { IProfile } from "./../types";
 
 function fetchProfile({ queryKey, signal }: QueryFunctionContext) {
   return api.get("/profile/" + queryKey[1], { signal }).then((res) => res.data);

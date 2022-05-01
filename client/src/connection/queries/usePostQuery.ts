@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from "connection/api";
-import { QueryFunctionContext, useQuery } from "react-query";
+import { QueryFunctionContext, useQuery, UseQueryOptions } from "react-query";
 import { QUERY_KEYS } from "../QueryKeys";
 import { IPost } from "../types";
 
@@ -14,6 +14,13 @@ interface IPostResponse {
   replies: IPost[];
 }
 
-export default function usePostQuery(id: string) {
-  return useQuery<IPostResponse, AxiosError>([QUERY_KEYS.POST, id], fetchPost);
+export default function usePostQuery(
+  id: string,
+  options?: UseQueryOptions<IPostResponse, AxiosError>
+) {
+  return useQuery<IPostResponse, AxiosError>(
+    [QUERY_KEYS.POST, id],
+    fetchPost,
+    options
+  );
 }

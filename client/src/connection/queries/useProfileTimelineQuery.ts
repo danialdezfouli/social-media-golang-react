@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from "connection/api";
-import { QueryFunctionContext, useQuery } from "react-query";
+import { QueryFunctionContext, useQuery, UseQueryOptions } from "react-query";
 import { QUERY_KEYS } from "../QueryKeys";
 import { IPost } from "../types";
 
@@ -15,10 +15,13 @@ export interface IProfileTimeline {
   parents: IPost[];
 }
 
-export default function useProfileTimelineQuery(id: string | undefined) {
+export default function useProfileTimelineQuery(
+  id: string | undefined,
+  options?: UseQueryOptions<IProfileTimeline, AxiosError>
+) {
   return useQuery<IProfileTimeline, AxiosError>(
     [QUERY_KEYS.PROFILE_TIMELINE, id],
     fetchProfileTimeline,
-    {}
+    options
   );
 }

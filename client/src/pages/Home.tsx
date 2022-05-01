@@ -2,9 +2,15 @@ import { Spinner } from "components/elements/Spinner";
 import Text from "components/elements/Text";
 import PostItem from "components/timeline/post/Post";
 import useHomeTimelineQuery from "connection/queries/useHomeTimelineQuery";
+import { useLike } from "contexts/LikeContext";
 
 export default function Home() {
-  const { data, isLoading } = useHomeTimelineQuery();
+  const { setLikes } = useLike();
+  const { data, isLoading } = useHomeTimelineQuery({
+    onSuccess: (data) => {
+      setLikes([...data.posts, ...Object.values(data.parents)]);
+    },
+  });
 
   return (
     <section className="home-timeline pb-32">
