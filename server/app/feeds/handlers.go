@@ -7,7 +7,6 @@ import (
 	"jupiter/app/feeds/dto"
 	"jupiter/app/feeds/repository"
 	"jupiter/app/feeds/service"
-	"jupiter/app/model"
 	"net/http"
 )
 
@@ -84,29 +83,4 @@ func findPost(c echo.Context) error {
 		"replies": replies,
 		"parents": parentsMap,
 	})
-}
-
-func likePost(c echo.Context) error {
-	params := new(dto.PostDTO)
-	user := common.GetUser(c)
-	err := c.Bind(params)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	db := app.GetDB()
-	postService := service.NewPostService(db, c)
-	post, err := postService.FindPost(params.ID)
-	liked := postService.ToggleLike(post, user)
-	postService.UpdatePostCounters(&model.Post{PostId: post.PostId})
-
-	if err != nil {
-		return echo.ErrNotFound
-	}
-
-	return c.JSON(http.StatusOK, echo.Map{
-		"post":  post,
-		"liked": liked,
-	})
-
 }

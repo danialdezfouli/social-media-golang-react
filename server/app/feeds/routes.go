@@ -3,6 +3,7 @@ package feeds
 import (
 	"github.com/labstack/echo/v4"
 	"jupiter/app/common/middleware"
+	"jupiter/app/feeds/actions"
 )
 
 func Routes(e *echo.Echo) {
@@ -11,9 +12,9 @@ func Routes(e *echo.Echo) {
 
 	r.GET("timeline", homeTimeline)
 	r.GET("search", search)
-
 	r.GET("post/:id", findPost)
-	r.POST("post/:id/like", likePost)
+
+	r.POST("post/:id/like", actions.LikePost)
 
 	r.GET("profile/:id", profile)
 	r.GET("profile/:id/timeline", profileTimeline)
