@@ -56,7 +56,7 @@ func search(c echo.Context) error {
 }
 
 func findPost(c echo.Context) error {
-	params := new(dto.PostDTO)
+	params := new(dto.FindPostDTO)
 	if err := c.Bind(params); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

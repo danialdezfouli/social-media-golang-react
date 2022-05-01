@@ -37,6 +37,7 @@ func profileTimeline(c echo.Context) error {
 
 	service.QueryTimeline(int(params.Offset), user).
 		Where("posts.user_id = ?", profile.ID).
+		Limit(-1).
 		Find(posts)
 
 	parents := postService.FindParentsForTimeline(posts)

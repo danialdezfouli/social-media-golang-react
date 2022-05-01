@@ -15,6 +15,7 @@ func Routes(e *echo.Echo) {
 	r.GET("post/:id", findPost)
 
 	r.POST("post/:id/like", actions.LikePost)
+	r.POST("post", actions.AddPost)
 
 	r.GET("profile/:id", profile)
 	r.GET("profile/:id/timeline", profileTimeline)

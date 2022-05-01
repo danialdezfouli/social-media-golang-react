@@ -12,6 +12,6 @@ type SearchDTO struct {
 	Query string `query:"q"`
 }
 
-type PostDTO struct {
+type FindPostDTO struct {
 	ID uint `param:"id"`
 }

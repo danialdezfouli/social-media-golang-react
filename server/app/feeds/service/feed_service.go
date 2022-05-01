@@ -23,7 +23,7 @@ func QueryTimelineBasic(user *model.User) *gorm.DB {
 func QueryTimeline(offset int, user *model.User) *gorm.DB {
 	return QueryTimelineBasic(user).
 		//Group("posts.post_id").
-		Order("created_at desc").
+		Order("posts.created_at desc").
 		Limit(timelinePostLimit).
 		Offset(offset)
 }

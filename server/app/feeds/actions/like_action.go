@@ -11,7 +11,7 @@ import (
 )
 
 func LikePost(c echo.Context) error {
-	params := new(dto.PostDTO)
+	params := new(dto.FindPostDTO)
 	err := c.Bind(params)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
