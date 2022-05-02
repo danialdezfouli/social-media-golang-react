@@ -6,6 +6,7 @@ import PostFooterActions from "./PostFooterActions";
 import PostHeaderProfile from "./PostHeaderProfile";
 import "./Post.css";
 import { TReplyLine } from "./types";
+import { useAuth } from "contexts/AuthContext";
 
 type PostItemProps = {
   post: IPost;
@@ -26,8 +27,9 @@ export default function PostItem(props: PostItemProps) {
     replyLine,
   } = props;
 
-  const navigate = useNavigate();
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const { post_type } = post;
 
@@ -73,10 +75,13 @@ export default function PostItem(props: PostItemProps) {
 
       <PostHeaderProfile
         name={source.profile_name}
+        linkedPost={linkedPost}
         url={"/profile/" + source.profile_username}
         username={source.profile_username}
         createdAt={source.created_at}
         isLinked={showActions}
+        post={post}
+        hasPopoverActions={Boolean(user && user.id === post.user_id)}
         showDate={!isFullPost}
         replyLine={replyLine}
       />
@@ -84,7 +89,10 @@ export default function PostItem(props: PostItemProps) {
       {post_type === "reply" && parent?.user_id && (
         <Text className="post-item__headline-reply" size="sm">
           {t("post.replying-to")}{" "}
-          <Link to={`/profile/${parent.profile_username}`} onClick={stopPropagation}>
+          <Link
+            to={`/profile/${parent.profile_username}`}
+            onClick={stopPropagation}
+          >
             {parent.profile_name}
           </Link>
         </Text>

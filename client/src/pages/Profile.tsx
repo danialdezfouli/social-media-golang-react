@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import Button from "components/elements/Button";
 import PageHeader from "components/elements/PageHeader";
 import PostItem from "components/timeline/post/Post";
@@ -19,28 +20,28 @@ export default function Profile() {
   const params = useParams<"id">();
   const { data: profile } = useProfileQuery(params.id);
   const { setLikes } = useLike();
-  const { data } = useProfileTimelineQuery(profile?.username, {
+  const { data } = useProfileTimelineQuery(params.id, {
     onSuccess: (data) => {
       setLikes([...data.posts, ...Object.values(data.parents)]);
     },
+    enabled: Boolean(profile),
   });
-
-  if (!profile) {
-    return <div>loading...</div>;
-  }
 
   return (
     <section className="profile-page">
       <PageHeader>
         {t("profile.title")}
-        {data && (
-          <span className="font-normal text-sm block">
-            {data.posts.length} {t("profile.post")}
-          </span>
-        )}
+        <span
+          className={classNames("font-normal text-sm block", {
+            "opacity-0": !data,
+          })}
+        >
+          {data?.posts.length} {t("profile.post")}
+        </span>
       </PageHeader>
-      <ProfileHeader profile={profile} />
-      <ProfilePosts data={data} />
+      {!profile && <div className="p-8">{t("actions.loading")}</div>}
+      {profile && <ProfileHeader profile={profile} />}
+      {profile && <ProfilePosts data={data} />}
     </section>
   );
 }

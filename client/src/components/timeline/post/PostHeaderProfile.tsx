@@ -1,14 +1,23 @@
+import { Popover } from "@headlessui/react";
+import { Spinner } from "components/elements/Spinner";
+import usePostDeleteMutation from "connection/mutations/usePostDeleteMutation";
+import { IPost } from "connection/types";
+import { useTranslation } from "react-i18next";
+import { RiMoreFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { humanTime } from "utils/dates";
 import { TReplyLine } from "./types";
 
 type PostProfileHeaderProps = {
+  post: IPost;
+  linkedPost?: IPost;
   url: string;
   name: string;
   username: string;
   createdAt: string;
   isLinked: boolean;
   showDate: boolean;
+  hasPopoverActions: boolean;
   replyLine: TReplyLine | undefined;
 };
 
@@ -19,13 +28,24 @@ export default function PostProfileHeader(props: PostProfileHeaderProps) {
     username = "",
     createdAt = "",
     isLinked = true,
+    hasPopoverActions = false,
     showDate = true,
     replyLine,
+    linkedPost,
+    post,
   } = props;
 
+  const { t } = useTranslation();
   const date = showDate && humanTime(createdAt, "fa_IR");
+  const postDelete = usePostDeleteMutation(
+    linkedPost || post,
+    post.profile_username
+  );
 
   const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
+  const handleDelete = () => {
+    postDelete.mutate({ post_id: post.post_id });
+  };
 
   return (
     <header className="profile">
@@ -66,6 +86,20 @@ export default function PostProfileHeader(props: PostProfileHeaderProps) {
           )}
         </div>
       </div>
+
+      {hasPopoverActions && (
+        <Popover className="header-actions" onClick={stopPropagation}>
+          <Popover.Button className="header-actions__btn">
+            <RiMoreFill />
+          </Popover.Button>
+          <Popover.Panel className="header-actions__panel">
+            <button onClick={handleDelete}>
+              {t("post.delete")}
+              {postDelete.isLoading && <Spinner />}
+            </button>
+          </Popover.Panel>
+        </Popover>
+      )}
     </header>
   );
 }

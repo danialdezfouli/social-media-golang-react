@@ -12,10 +12,11 @@ func Routes(e *echo.Echo) {
 
 	r.GET("timeline", homeTimeline)
 	r.GET("search", search)
-	r.GET("post/:id", findPost)
 
-	r.POST("post/:id/like", actions.LikePost)
 	r.POST("post", actions.AddPost)
+	r.GET("post/:id", findPost)
+	r.DELETE("post/:id", actions.DeletePost)
+	r.POST("post/:id/like", actions.LikePost)
 
 	r.GET("profile/:id", profile)
 	r.GET("profile/:id/timeline", profileTimeline)

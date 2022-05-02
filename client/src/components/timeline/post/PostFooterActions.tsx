@@ -4,7 +4,7 @@ import { useLike } from "contexts/LikeContext";
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { RiChat1Line, RiHeart3Fill, RiHeart3Line } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { postDateTime } from "utils/dates";
 
 type PostActionsProps = {
@@ -22,7 +22,6 @@ export default function PostActions({
 }: PostActionsProps) {
   const { isLiked } = useLike();
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const source = useMemo(() => {
     if (post.post_type === "repost" && parent) {
       return parent;
