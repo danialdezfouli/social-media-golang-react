@@ -1,8 +1,11 @@
 import Button from "components/elements/Button";
+import PageHeader from "components/elements/PageHeader";
 import PostItem from "components/timeline/post/Post";
 import { useFollowMutation } from "connection/mutations/useFollowMutation";
 import useProfileQuery from "connection/queries/useProfileQuery";
-import useProfileTimelineQuery from "connection/queries/useProfileTimelineQuery";
+import useProfileTimelineQuery, {
+  IProfileTimeline,
+} from "connection/queries/useProfileTimelineQuery";
 import { IProfile } from "connection/types";
 import { useAuth } from "contexts/AuthContext";
 import { useLike } from "contexts/LikeContext";
@@ -12,35 +15,42 @@ import { Link, useParams } from "react-router-dom";
 import "./Profile.css";
 
 export default function Profile() {
-  const params = useParams<"id">();
-  const { data } = useProfileQuery(params.id);
-
-  if (!data) {
-    return <div>loading...</div>;
-  }
-
-  return (
-    <section className="profile-page">
-      <ProfileHeader profile={data} />
-      <ProfilePosts profile={data} />
-    </section>
-  );
-}
-
-function ProfilePosts({ profile }: { profile: IProfile }) {
   const { t } = useTranslation();
+  const params = useParams<"id">();
+  const { data: profile } = useProfileQuery(params.id);
   const { setLikes } = useLike();
-  const { data } = useProfileTimelineQuery(profile.username, {
+  const { data } = useProfileTimelineQuery(profile?.username, {
     onSuccess: (data) => {
       setLikes([...data.posts, ...Object.values(data.parents)]);
     },
   });
 
+  if (!profile) {
+    return <div>loading...</div>;
+  }
+
+  return (
+    <section className="profile-page">
+      <PageHeader>
+        {t("profile.title")}
+        {data && (
+          <span className="font-normal text-sm block">
+            {data.posts.length} {t("profile.post")}
+          </span>
+        )}
+      </PageHeader>
+      <ProfileHeader profile={profile} />
+      <ProfilePosts data={data} />
+    </section>
+  );
+}
+
+function ProfilePosts({ data }: { data?: IProfileTimeline }) {
+  const { t } = useTranslation();
+
   return (
     <>
-      <div className="profile-page__posts-header">
-        {t("profile.posts")} {data && <>({data.posts.length})</>}
-      </div>
+      <div className="profile-page__posts-header">{t("profile.posts")}</div>
       <div className="profile-page__posts">
         {data?.posts.map((post) => (
           <PostItem
