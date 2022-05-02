@@ -1,4 +1,5 @@
 import { Spinner } from "components/elements/Spinner";
+import PostCreateForm from "components/timeline/forms/PostCreateForm";
 import PostItem from "components/timeline/post/Post";
 import usePostQuery from "connection/queries/usePostQuery";
 import { IPost } from "connection/types";
@@ -73,6 +74,8 @@ export default function PostPage() {
           parent={data.parents[post.parent_id]}
         />
       )}
+
+      {post && <PostCreateForm replyTo={post} type="reply" />}
 
       {data && (
         <div className="replies-list">

@@ -29,6 +29,7 @@
       "signup": "ثبت نام کنید"
     },
     "signup": {
+      "subtitle": "ثبت نام کاربران",
       "email": "ایمیل",
       "username": "نام کاربری",
       "name": "نام",
@@ -48,11 +49,16 @@
       "deleted": "پست مورد نظر حذف شده",
       "reposted": "باز نشر کرد",
       "replying-to": "در پاسخ به",
+      "reply-to": "پاسخ به",
       "like": "پسند",
       "replies": "پاسخ",
       "reply": "پاسخ",
       "repost": "بازنشر",
-      "quote": "نقل قول"
+      "quote": "نقل قول",
+      "form": {
+        "body-placeholder": "متن پست خود را وارد کنید",
+        "send": "ارسال"
+      }
     },
     "profile": {
       "posts": "پست‌ها",

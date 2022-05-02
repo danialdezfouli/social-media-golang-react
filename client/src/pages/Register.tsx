@@ -9,10 +9,10 @@ export default function Register() {
     <div className="auth-page py-6">
       <div className="container-md">
         <Text as="h1" size="3xl" align="center" weight="bold" className="mb-2">
-          {t("home.welcome")}
+          {t("login.welcome")}
         </Text>
         <Text as="h2" size="xl" align="center" weight="bold" className="mb-4">
-          {t("home.signup")}
+          {t("signup.subtitle")}
         </Text>
         <RegisterForm />
       </div>

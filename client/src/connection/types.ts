@@ -1,4 +1,4 @@
-type PostTypesShape = "post" | "quote" | "repost" | "reply";
+export type PostTypesShape = "post" | "quote" | "repost" | "reply";
 
 export interface IPost {
   post_id: number;

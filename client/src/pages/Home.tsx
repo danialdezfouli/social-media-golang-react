@@ -1,6 +1,7 @@
 import PageHeader from "components/elements/PageHeader";
 import { Spinner } from "components/elements/Spinner";
 import Text from "components/elements/Text";
+import PostCreateForm from "components/timeline/forms/PostCreateForm";
 import PostItem from "components/timeline/post/Post";
 import useHomeTimelineQuery from "connection/queries/useHomeTimelineQuery";
 import { useLike } from "contexts/LikeContext";
@@ -23,6 +24,8 @@ export default function Home() {
           <Spinner />
         </div>
       )}
+
+      <PostCreateForm type="post" />
 
       {data?.posts && data.posts.length === 0 && (
         <div className="py-10 px-2">

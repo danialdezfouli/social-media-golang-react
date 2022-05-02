@@ -84,7 +84,7 @@ export default function PostItem(props: PostItemProps) {
       {post_type === "reply" && parent?.user_id && (
         <Text className="post-item__headline-reply" size="sm">
           {t("post.replying-to")}{" "}
-          <Link to={`/profile/${parent.user_id}`} onClick={stopPropagation}>
+          <Link to={`/profile/${parent.profile_username}`} onClick={stopPropagation}>
             {parent.profile_name}
           </Link>
         </Text>

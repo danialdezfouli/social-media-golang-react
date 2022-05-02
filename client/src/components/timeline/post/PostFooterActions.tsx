@@ -4,7 +4,7 @@ import { useLike } from "contexts/LikeContext";
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { RiChat1Line, RiHeart3Fill, RiHeart3Line } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { postDateTime } from "utils/dates";
 
 type PostActionsProps = {
@@ -22,6 +22,7 @@ export default function PostActions({
 }: PostActionsProps) {
   const { isLiked } = useLike();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const source = useMemo(() => {
     if (post.post_type === "repost" && parent) {
       return parent;
@@ -80,16 +81,13 @@ export default function PostActions({
           <i>{liked ? <RiHeart3Fill /> : <RiHeart3Line />}</i>
           {!largeLayout && <span>{source.favorites_count}</span>}
         </button>
-        <button
-          className="reply"
-          title={t("post.reply")}
-          onClick={(e) => e.stopPropagation()}
-        >
+        <button className="reply" type="button" title={t("post.reply")}>
           <i>
             <RiChat1Line />
           </i>
           {!largeLayout && <span>{source.replies_count}</span>}
         </button>
+
         {/* <button
           className={"repost " + (post.reposted ? "en" : "")}
           title={t('post.repost')}
