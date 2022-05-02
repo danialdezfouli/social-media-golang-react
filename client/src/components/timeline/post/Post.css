@@ -108,7 +108,7 @@
   @apply my-2;
 }
 
-.post-item__full .post-content {
+.post-item__full > .post-content {
   @apply text-xl;
 }
 
@@ -129,6 +129,7 @@
   padding-bottom: 1rem;
 }
 .post-item__full .post-footer {
+  padding-top: 1rem;
   margin-top: 2rem;
   border-top: 1px solid #f5f5f5;
 }

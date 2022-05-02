@@ -19,10 +19,10 @@ export default function Login() {
     <div className="auth-page py-6">
       <div className="container-md">
         <Text as="h1" size="3xl" align="center" weight="bold" className="mb-2">
-          {t("home.welcome")}
+          {t("login.welcome")}
         </Text>
         <Text as="h2" size="xl" align="center" weight="bold" className="mb-4">
-          {t("home.login")}
+          {t("login.login")}
         </Text>
         <LoginForm />
       </div>

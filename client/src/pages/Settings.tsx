@@ -1,11 +1,11 @@
-import Text from "components/elements/Text";
+import PageHeader from "components/elements/PageHeader";
 import { useTranslation } from "react-i18next";
 
 export default function Settings() {
   const { t } = useTranslation();
   return (
-    <div className="p-10">
-      <Text size="3xl">{t("settings.title")}</Text>
+    <div>
+      <PageHeader>{t("settings.title")}</PageHeader>
     </div>
   );
 }
