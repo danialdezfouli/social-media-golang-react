@@ -1,13 +1,14 @@
 package feeds
 
 import (
-	"github.com/labstack/echo/v4"
 	"jupiter/app"
 	"jupiter/app/common"
 	"jupiter/app/feeds/dto"
 	"jupiter/app/feeds/repository"
 	"jupiter/app/feeds/service"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 func homeTimeline(c echo.Context) error {
@@ -23,7 +24,7 @@ func homeTimeline(c echo.Context) error {
 	var profiles = &[]repository.SearchProfile{}
 
 	service.QueryTimeline(int(params.Offset), user).
-		Joins("inner join follows on follows.follower_id = ?", user.ID).
+		Joins("left join follows on follows.follower_id = ?", user.ID).
 		Where("posts.user_id = follows.following_id or posts.user_id=?", user.ID).
 		Find(posts)
 
