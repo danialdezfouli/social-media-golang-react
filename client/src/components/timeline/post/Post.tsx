@@ -7,6 +7,7 @@ import PostHeaderProfile from "./PostHeaderProfile";
 import "./Post.css";
 import { TReplyLine } from "./types";
 import { useAuth } from "contexts/AuthContext";
+import { useMemo } from "react";
 
 type PostItemProps = {
   post: IPost;
@@ -32,6 +33,12 @@ export default function PostItem(props: PostItemProps) {
   const { user } = useAuth();
 
   const { post_type } = post;
+  const source = post_type === "repost" ? parent : post;
+  const sourceContent = source?.content || "";
+
+  const contentLines = useMemo(() => {
+    return sourceContent.split("\n");
+  }, [sourceContent]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,8 +51,6 @@ export default function PostItem(props: PostItemProps) {
 
   const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
   const profileUrl = "/profile/" + post.profile_username;
-
-  const source = post_type === "repost" ? parent : post;
 
   if (!source) {
     return (
@@ -98,7 +103,11 @@ export default function PostItem(props: PostItemProps) {
         </Text>
       )}
 
-      <p className="post-content">{source.content}</p>
+      <div className="post-content">
+        {contentLines.map((line, i) => (
+          <p key={i}>{line}</p>
+        ))}
+      </div>
 
       {post_type === "quote" &&
         (parent ? (
