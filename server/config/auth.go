@@ -14,7 +14,7 @@ type AuthConfig struct {
 
 func newAuthConfig() *AuthConfig {
 	return &AuthConfig{
-		AccessTokenDuration: time.Hour,
+		AccessTokenDuration: time.Hour * 12,
 		AccessTokenSecret:   GetEnv("ACCESS_TOKEN_SECRET"),
 
 		RefreshTokenDuration: time.Hour * 24 * 30,

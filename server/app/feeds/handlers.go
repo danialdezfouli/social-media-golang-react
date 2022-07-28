@@ -26,6 +26,7 @@ func homeTimeline(c echo.Context) error {
 	service.QueryTimeline(int(params.Offset), user).
 		Joins("left join follows on follows.follower_id = ?", user.ID).
 		Where("posts.user_id = follows.following_id or posts.user_id=?", user.ID).
+		Group("posts.post_id").
 		Find(posts)
 
 	service.QuerySuggestedProfiles(user).Find(profiles)
