@@ -37,7 +37,7 @@ export default function PostItem(props: PostItemProps) {
   const sourceContent = source?.content || "";
 
   const contentLines = useMemo(() => {
-    return sourceContent.split("\n");
+    return sourceContent.trim().split("\n");
   }, [sourceContent]);
 
   const handleClick = (e: React.MouseEvent) => {

@@ -144,6 +144,10 @@
   @apply my-2;
 }
 
+.post-item .post-content p {
+  min-height: 1em;
+}
+
 .post-item__full > .post-content {
   @apply text-xl;
 }
