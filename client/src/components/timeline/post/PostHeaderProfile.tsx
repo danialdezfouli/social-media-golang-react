@@ -2,6 +2,7 @@ import { Popover } from "@headlessui/react";
 import { Spinner } from "components/elements/Spinner";
 import usePostDeleteMutation from "connection/mutations/usePostDeleteMutation";
 import { IPost } from "connection/types";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RiMoreFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
@@ -35,6 +36,8 @@ export default function PostProfileHeader(props: PostProfileHeaderProps) {
     post,
   } = props;
 
+  const [popover, setPopover] = useState(hasPopoverActions);
+
   const { t } = useTranslation();
   const date = showDate && humanTime(createdAt, "fa_IR");
   const postDelete = usePostDeleteMutation(
@@ -44,6 +47,7 @@ export default function PostProfileHeader(props: PostProfileHeaderProps) {
 
   const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
   const handleDelete = () => {
+    setPopover(false);
     postDelete.mutate({ post_id: post.post_id });
   };
 
@@ -87,7 +91,7 @@ export default function PostProfileHeader(props: PostProfileHeaderProps) {
         </div>
       </div>
 
-      {hasPopoverActions && (
+      {popover && (
         <Popover className="header-actions" onClick={stopPropagation}>
           <Popover.Button className="header-actions__btn">
             <RiMoreFill />
