@@ -1,18 +1,40 @@
 package auth
 
 import (
-	"github.com/labstack/echo/v4"
 	"jupiter/app/auth/dto"
 	"jupiter/app/auth/service"
 	"jupiter/app/common"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
+
+func updateProfile(c echo.Context) error {
+	input := new(dto.UpdateProfileInput)
+
+	if err := c.Bind(input); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	if err := c.Validate(input); err != nil {
+		return err
+	}
+
+	authService := service.AuthService{}
+	user := common.GetUser(c)
+
+	authService.UpdateProfile(user, input)
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"message": "profile updated successfuly",
+	})
+}
 
 func me(c echo.Context) error {
 	user := common.GetUser(c)
 
 	return c.JSON(http.StatusOK, meResponse{
 		ID:        user.ID,
+		Bio:       user.Bio,
 		Name:      user.Name,
 		Username:  user.Username,
 		Suspended: user.Suspended,

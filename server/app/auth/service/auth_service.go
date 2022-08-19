@@ -2,13 +2,16 @@ package service
 
 import (
 	"errors"
-	"github.com/golang-jwt/jwt"
-	"github.com/labstack/echo/v4"
+	"fmt"
 	"jupiter/app"
+	"jupiter/app/auth/dto"
 	"jupiter/app/common/token"
 	"jupiter/app/model"
 	"jupiter/config"
 	"net/http"
+
+	"github.com/golang-jwt/jwt"
+	"github.com/labstack/echo/v4"
 )
 
 type AuthService struct {
@@ -91,4 +94,18 @@ func (s AuthService) User(c echo.Context) (*model.User, error) {
 		return nil, echo.NewHTTPError(http.StatusUnauthorized, "your account is suspended")
 	}
 	return user, nil
+}
+
+func (s AuthService) UpdateProfile(user *model.User, input *dto.UpdateProfileInput) {
+	db := app.GetDB()
+
+	result := db.Model(&user).Limit(1).Updates(map[string]interface{}{
+		"name": input.Name,
+		"bio":  input.Bio,
+	})
+
+	if result.Error != nil {
+		fmt.Println(result.Error.Error())
+	}
+
 }
