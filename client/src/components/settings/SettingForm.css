@@ -1,0 +1,16 @@
+.settings-form {
+  padding: 1rem;
+}
+
+.settings-form label {
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.settings-form .form-control {
+  width: 100%;
+}
+
+.settings-form .form-group {
+  margin-bottom: 0.75rem;
+}

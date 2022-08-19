@@ -33,7 +33,7 @@ export default function Layout() {
     return (
       <div className="fixed left-0 top-0 w-full h-full flex items-center justify-center">
         {error && (error as any)?.message === "Network Error" ? (
-          <div>
+          <div className="flex flex-col items-center justify-center">
             <Text size="xl" className="p-4">
               {t("error.network")}
             </Text>
